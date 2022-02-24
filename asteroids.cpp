@@ -55,6 +55,9 @@ extern double timeSpan;
 extern double timeDiff(struct timespec *start, struct timespec *end);
 extern void timeCopy(struct timespec *dest, struct timespec *source);
 //-----------------------------------------------------------------------------
+//emomen.cpp
+extern void testFunc_emomen();
+//-----------------------------------------------------------------------------
 
 class Global {
 public:
@@ -317,6 +320,7 @@ int main()
 {
 	logOpen();
 	init_opengl();
+	testFunc_emomen(); // from emomen.cpp
 	srand(time(NULL));
 	clock_gettime(CLOCK_REALTIME, &timePause);
 	clock_gettime(CLOCK_REALTIME, &timeStart);
