@@ -329,7 +329,7 @@ int main()
 	testFunc_emomen(); // from emomen.cpp
 	acardenassilName(); // alonso: name print
 	nromasanta_print(); // name print from nromasanta.cpp
-    test(); //print "Hello world!" (from iruiz.cpp)
+    test(); //print "Hello world! " (from iruiz.cpp)
 	sleep(2);
 	logOpen();
 	init_opengl();
