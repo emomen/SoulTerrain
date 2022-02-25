@@ -58,7 +58,9 @@ extern void timeCopy(struct timespec *dest, struct timespec *source);
 //emomen.cpp
 extern void testFunc_emomen();
 //-----------------------------------------------------------------------------
-
+//acardenassil.cpp
+extern void acardenassilName();
+//-----------------------------------------------------------------------------
 class Global {
 public:
 	int xres, yres;
@@ -318,9 +320,11 @@ void render();
 //==========================================================================
 int main()
 {
+	testFunc_emomen(); // from emomen.cpp
+	acardenassilName(); // alonso: name print
+	sleep(2);
 	logOpen();
 	init_opengl();
-	testFunc_emomen(); // from emomen.cpp
 	srand(time(NULL));
 	clock_gettime(CLOCK_REALTIME, &timePause);
 	clock_gettime(CLOCK_REALTIME, &timeStart);
