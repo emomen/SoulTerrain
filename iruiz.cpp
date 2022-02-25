@@ -7,5 +7,5 @@ using namespace std;
 
 void test()
 {
-    cout << "Hello world!" << endl;
+    cout << "Hello world! " << endl;
 }
