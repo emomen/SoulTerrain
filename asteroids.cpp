@@ -61,6 +61,9 @@ extern void testFunc_emomen();
 //acardenassil.cpp
 extern void acardenassilName();
 //-----------------------------------------------------------------------------
+//nromasanta.cpp
+extern void nromasanta_print();
+//-----------------------------------------------------------------------------
 class Global {
 public:
 	int xres, yres;
@@ -215,7 +218,7 @@ public:
 		if (vi == NULL) {
 			std::cout << "\n\tno appropriate visual found\n" << std::endl;
 			exit(EXIT_FAILURE);
-		} 
+		}
 		Colormap cmap = XCreateColormap(dpy, root, vi->visual, AllocNone);
 		swa.colormap = cmap;
 		swa.event_mask = ExposureMask | KeyPressMask | KeyReleaseMask |
@@ -322,6 +325,7 @@ int main()
 {
 	testFunc_emomen(); // from emomen.cpp
 	acardenassilName(); // alonso: name print
+	nromasanta_print(); // name print from nromasanta.cpp
 	sleep(2);
 	logOpen();
 	init_opengl();
@@ -443,7 +447,7 @@ void check_mouse(XEvent *e)
 		int xdiff = savex - e->xbutton.x;
 		int ydiff = savey - e->xbutton.y;
 		if (++ct < 10)
-			return;		
+			return;
 		//std::cout << "savex: " << savex << std::endl << std::flush;
 		//std::cout << "e->xbutton.x: " << e->xbutton.x << std::endl <<
 		//std::flush;
@@ -889,6 +893,3 @@ void render()
 		glEnd();
 	}
 }
-
-
-
