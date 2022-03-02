@@ -1,6 +1,6 @@
 /* Nicholas Romasanta
  * This is a display of my coding skills
- * 
+ * Changing email for account 
 */
 
 #include <stdio.h>
