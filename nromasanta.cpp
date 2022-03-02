@@ -1,3 +1,8 @@
+/* Nicholas Romasanta
+ * This is a display of my coding skills
+ * 
+*/
+
 #include <stdio.h>
 #include <iostream>
 /* Example function
