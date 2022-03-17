@@ -67,7 +67,7 @@ extern void acardenassilName();
 extern class nromasanta nr;
 //-----------------------------------------------------------------------------
 //iruiz.cpp
-extern void test();
+extern void test(char *keys);
 //-----------------------------------------------------------------------------
 class Global {
 public:
@@ -346,7 +346,7 @@ int main()
 	em.print_name(); // from emomen.cpp
 	acardenassilName(); // alonso: name print
 	nr.nromasanta_print(); // name print from nromasanta.cpp
-    test(); //print "Hello world! " (from iruiz.cpp)
+    //test(); //print "Hello world! " (from iruiz.cpp)
 	sleep(2);
 	logOpen();
 	init_opengl();
