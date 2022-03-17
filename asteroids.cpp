@@ -148,6 +148,7 @@ public:
 		nbullets = 0;
 		mouseThrustOn = false;
 		//build 10 asteroids...
+		
 		for (int j=0; j<10; j++) {
 			Asteroid *a = new Asteroid;
 			a->nverts = 8;
@@ -160,20 +161,30 @@ public:
 				a->vert[i][1] = cos(angle) * (r2 + rnd() * a->radius);
 				angle += inc;
 			}
-			//bottom 3 define STARTING POINT of asteroids
-			//AKA: Spawn Point
-			a->pos[0] = (Flt)(rand() % gl.xres);
-			a->pos[1] = (Flt)(rand() % gl.yres);
-			a->pos[2] = 0.0f;
-			a->angle = 0.0;
-			a->rotate = rnd() * 4.0 - 2.0;
-			//a->color changes border of asteroid
+			//--------Part of Gordon's framework---------
+			//**a->pos[] changes spawn point of asteroids
+			//a->pos[0] = (Flt)(rand() % gl.xres);
+			//a->pos[1] = (Flt)(rand() % gl.yres);
+			//a->pos[2] = 0.0f;
+			
+			//**a->color changes border of asteroid**
 			//a->color[0] = 0.8; 
 			//a->color[1] = 0.8; 
 			//a->color[2] = 0.7;   
-			nr.enemyImage(a->color); // Use to change color of asteroid
-			a->vel[0] = (Flt)(rnd()*2.0-1.0);
-			a->vel[1] = (Flt)(rnd()*2.0-1.0);
+			
+			//**a->vel[] will change speed of asteroids**
+			//a->vel[0] = (Flt)(rnd()*2.0-1.0);
+			//a->vel[1] = (Flt)(rnd()*2.0-1.0); //speed vertically
+			//------------------------------------------
+		
+			//enemyBehavior() defines movement 
+			nr.enemyBehavior(a->vel, a->pos, gl.xres, gl.yres,rnd()); 
+			nr.enemyImage(a->color); //draws enemy appearance
+			
+			a->angle = 0.0;
+			a->rotate = rnd() * 4.0 - 2.0;
+			
+			
 			//std::cout << "asteroid" << std::endl;
 			//add to front of linked list
 			a->next = ahead;
