@@ -160,14 +160,18 @@ public:
 				a->vert[i][1] = cos(angle) * (r2 + rnd() * a->radius);
 				angle += inc;
 			}
+			//bottom 3 define STARTING POINT of asteroids
+			//AKA: Spawn Point
 			a->pos[0] = (Flt)(rand() % gl.xres);
 			a->pos[1] = (Flt)(rand() % gl.yres);
 			a->pos[2] = 0.0f;
 			a->angle = 0.0;
 			a->rotate = rnd() * 4.0 - 2.0;
-			a->color[0] = 0.8;
-			a->color[1] = 0.8;
-			a->color[2] = 0.7;
+			//a->color changes border of asteroid
+			//a->color[0] = 0.8; 
+			//a->color[1] = 0.8; 
+			//a->color[2] = 0.7;   
+			nr.enemyImage(a->color); // Use to change color of asteroid
 			a->vel[0] = (Flt)(rnd()*2.0-1.0);
 			a->vel[1] = (Flt)(rnd()*2.0-1.0);
 			//std::cout << "asteroid" << std::endl;
@@ -685,7 +689,7 @@ void physics()
 				//std::cout << "asteroid hit." << std::endl;
 				//this asteroid is hit.
 				if (a->radius > MINIMUM_ASTEROID_SIZE) {
-					//break it into pieces.
+					
 					Asteroid *ta = a;
 					buildAsteroidFragment(ta, a);
 					int r = rand()%10+5;
@@ -857,10 +861,11 @@ void render()
 		Asteroid *a = g.ahead;
 		while (a) {
 			//Log("draw asteroid...\n");
+			
 			glColor3fv(a->color);
 			glPushMatrix();
-			glTranslatef(a->pos[0], a->pos[1], a->pos[2]);
-			glRotatef(a->angle, 0.0f, 0.0f, 1.0f);
+			glTranslatef(a->pos[0], a->pos[1], a->pos[2]); //position of asteroids
+			glRotatef(a->angle, 0.0f, 0.0f, 1.0f); //rotates asteroid
 			glBegin(GL_LINE_LOOP);
 			//Log("%i verts\n",a->nverts);
 			for (int j=0; j<a->nverts; j++) {
@@ -873,10 +878,10 @@ void render()
 			//glEnd();
 			glPopMatrix();
 			glColor3f(1.0f, 0.0f, 0.0f);
-			glBegin(GL_POINTS);
-			glVertex2f(a->pos[0], a->pos[1]);
+			glBegin(GL_POINTS); //red dot in middle of asteroids
+			glVertex2f(a->pos[0], a->pos[1]); 
 			glEnd();
-			a = a->next;
+			a = a->next; 
 		}
 	}
 	//-------------------------------------------------------------------------
