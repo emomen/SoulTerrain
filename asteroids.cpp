@@ -63,7 +63,8 @@ extern class Emomen em;
 extern void acardenassilName();
 //-----------------------------------------------------------------------------
 //nromasanta.cpp
-extern void nromasanta_print();
+#include "nromasanta.h"
+extern class nromasanta nr;
 //-----------------------------------------------------------------------------
 //iruiz.cpp
 extern void test();
@@ -329,7 +330,7 @@ int main()
 {
 	em.print_name(); // from emomen.cpp
 	acardenassilName(); // alonso: name print
-	nromasanta_print(); // name print from nromasanta.cpp
+	nr.nromasanta_print(); // name print from nromasanta.cpp
     test(); //print "Hello world! " (from iruiz.cpp)
 	sleep(2);
 	logOpen();
