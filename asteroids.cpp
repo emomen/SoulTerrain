@@ -55,8 +55,9 @@ extern double timeSpan;
 extern double timeDiff(struct timespec *start, struct timespec *end);
 extern void timeCopy(struct timespec *dest, struct timespec *source);
 //-----------------------------------------------------------------------------
-//emomen.cpp
-extern void testFunc_emomen();
+// Importing the Emomen class instance
+#include "emomen.h"
+extern class Emomen em;
 //-----------------------------------------------------------------------------
 //acardenassil.cpp
 extern void acardenassilName();
@@ -326,7 +327,7 @@ void render();
 //==========================================================================
 int main()
 {
-	testFunc_emomen(); // from emomen.cpp
+	em.print_name(); // from emomen.cpp
 	acardenassilName(); // alonso: name print
 	nromasanta_print(); // name print from nromasanta.cpp
     test(); //print "Hello world! " (from iruiz.cpp)
