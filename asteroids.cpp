@@ -362,15 +362,28 @@ int main()
 			check_mouse(&e);
 			done = check_keys(&e);
 		}
-		clock_gettime(CLOCK_REALTIME, &timeCurrent);
-		timeSpan = timeDiff(&timeStart, &timeCurrent);
-		timeCopy(&timeStart, &timeCurrent);
-		physicsCountdown += timeSpan;
-		while (physicsCountdown >= physicsRate) {
-			physics();
-			physicsCountdown -= physicsRate;
+		switch (em.get_screen()) {
+			case start: {
+				em.render_start();
+				break;
+			}
+			case game: {
+				clock_gettime(CLOCK_REALTIME, &timeCurrent);
+				timeSpan = timeDiff(&timeStart, &timeCurrent);
+				timeCopy(&timeStart, &timeCurrent);
+				physicsCountdown += timeSpan;
+				while (physicsCountdown >= physicsRate) {
+					physics();
+					physicsCountdown -= physicsRate;
+				}
+				render();
+				break;
+			}
+			case credits: {
+				em.render_credits();
+				break;
+			}
 		}
-		render();
 		x11.swapBuffers();
 	}
 	cleanup_fonts();
@@ -536,13 +549,44 @@ int check_keys(XEvent *e)
 	(void)shift;
 	switch (key) {
 		case XK_Escape:
-			return 1;
+			if (em.get_screen() == start) {
+				return 1;
+			} else {
+				em.set_screen(start);
+			}
+			break;
 		case XK_f:
 			break;
 		case XK_s:
 			break;
-		case XK_Down:
+		case XK_Up: {
+			if (em.get_screen() == start) {
+				enum SelectedButton current = em.get_select();
+				int next = (current - 1) + em.get_num_buttons();
+				next %= em.get_num_buttons();
+				em.set_select((enum SelectedButton) next);
+			}
 			break;
+		}
+		case XK_Down: {
+			if (em.get_screen() == start) {
+				enum SelectedButton current = em.get_select();
+				int next = (current + 1) + em.get_num_buttons();
+				next %= em.get_num_buttons();
+				em.set_select((enum SelectedButton) next);
+			}
+			break;
+		}
+		case XK_Return: {
+			if (em.get_screen() == start) {
+				if (em.get_select() == game_button) {
+					em.set_screen(game);
+				} else if (em.get_select() == credits_button) {
+					em.set_screen(credits);
+				}
+			}
+			break;
+		}
 		case XK_equal:
 			break;
 		case XK_minus:
