@@ -23,7 +23,7 @@ Camera::Camera()
 
 }
 
-void Camera::setPosition(int x, int y)
+void Camera::setPosition()
 {
 
 }

@@ -24,6 +24,6 @@ private:
 	
 public:
 	Camera();
-	void setPosition(int x, int y);
+	void setPosition();
 };
 #endif
