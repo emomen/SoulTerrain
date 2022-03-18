@@ -39,11 +39,11 @@ void nromasanta::enemyBehavior(float direction[],float spawn[],int xres,
   spawn[2] = 0.0f;            //dont know yet
 }
 
-void nromasanta::enemyImage(float color[])
+void nromasanta::enemyImage(float color[], float r, float g, float b)
 {
   //TO-DO : attach an image to each asteroid
-  color[0] = 0.0; // Original : 0.8, 0.8, 0.7
-  color[1] = 100.0;
-  color[2] = 0.0;
+  color[0] = r; // Original : 0.8, 0.8, 0.7
+  color[1] = g;
+  color[2] = b;
 }
 //-----------FUTURE FUNCTIONS-------------

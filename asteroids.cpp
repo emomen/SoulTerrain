@@ -180,8 +180,8 @@ public:
 		
 			//enemyBehavior() defines movement 
 			nr.enemyBehavior(a->vel, a->pos, gl.xres, gl.yres,rnd()); 
-			nr.enemyImage(a->color); //draws enemy appearance
-			
+			nr.enemyImage(a->color, 100.0, 0.0, 0.0); //draws enemy appearance
+	
 			a->angle = 0.0;
 			a->rotate = rnd() * 4.0 - 2.0;
 			
@@ -649,9 +649,10 @@ void buildAsteroidFragment(Asteroid *ta, Asteroid *a)
 	ta->pos[2] = 0.0f;
 	ta->angle = 0.0;
 	ta->rotate = a->rotate + (rnd() * 4.0 - 2.0);
-	ta->color[0] = 0.8;
-	ta->color[1] = 0.8;
-	ta->color[2] = 0.7;
+	//ta->color[0] = 0.8;
+	//ta->color[1] = 0.8;
+	//ta->color[2] = 0.7;
+	nr.enemyImage(ta->color, 100.0, 200.0, 0); //draws enemy appearance
 	ta->vel[0] = a->vel[0] + (rnd()*2.0-1.0);
 	ta->vel[1] = a->vel[1] + (rnd()*2.0-1.0);
 	//std::cout << "frag" << std::endl;
