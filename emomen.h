@@ -34,6 +34,7 @@ public:
     Emomen();
     // Emomen(int num);
     void print_name();
+    void set_window_size(int, int);
     enum GameScreen get_screen();
     void set_screen(enum GameScreen);
     enum SelectedButton get_select();

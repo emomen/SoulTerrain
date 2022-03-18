@@ -16,8 +16,8 @@ Emomen::Emomen()
     screen = start;
     select = game_button;
     num_buttons = 2;
-    xres = 640;
-    yres = 480;
+    xres = 0;
+    yres = 0;
 }
 
 // Emomen::Emomen(int num)
@@ -31,6 +31,12 @@ void Emomen::print_name()
 {
     std::cout << "Game starting..." << std::endl;
     std::cout << "Evan Momen" << std::endl;
+}
+
+void Emomen::set_window_size(int x, int y)
+{
+    xres = x;
+    yres = y;
 }
 
 enum GameScreen Emomen::get_screen()
@@ -89,10 +95,10 @@ int *textcolor)
 // render the start menu
 void Emomen::render_start() 
 {
-    int b_width = 200;
-    int b_height = 75;
-    int b_spacing = 150;
-    int top_margin = 100;
+    int b_width = xres/3;
+    int b_height = yres/7.5;
+    int b_spacing = yres/3;
+    int top_margin = yres/5;
     int text_padding = 10 + b_height / 2;
     float button_color[3] = {0.3843, 0.4706, 0.9608};
     float shadow_color = 0.35;
@@ -168,15 +174,15 @@ void Emomen::render_credits()
     int text_color = 0x00ffb759;
 
     Rect title;
-    int title_toppadding = 100;
-    int title_leftpadding = 250;
+    int title_toppadding = yres/5;
+    int title_leftpadding = xres/2.5;
     title.bot = yres - title_toppadding;
 	title.left = title_leftpadding;
 	title.center = 0;
 
     Rect names;
-    int names_toppadding = 200;
-    int names_leftpadding = 250;
+    int names_toppadding = yres/2.5;
+    int names_leftpadding = xres/2.5;
     names.bot = yres - names_toppadding;
 	names.left = names_leftpadding;
 	names.center = 0;
@@ -186,7 +192,7 @@ void Emomen::render_credits()
     ggprint16(&title, 16, text_color, "");
     ggprint13(&names, 16, text_color, "Isiah Ruiz");
     ggprint13(&names, 16, text_color, "");
-    ggprint13(&names, 16, text_color, "Alonso CardenasSillas");
+    ggprint13(&names, 16, text_color, "Alonso Cardenas Sillas");
     ggprint13(&names, 16, text_color, "");
     ggprint13(&names, 16, text_color, "Nicholas Romasanta");
     ggprint13(&names, 16, text_color, "");
