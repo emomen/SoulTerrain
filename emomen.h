@@ -39,7 +39,7 @@ public:
     enum SelectedButton get_select();
     void set_select(enum SelectedButton);
     int get_num_buttons();
-    void raise_button(float[4][2], Rect*, int*);
+    void raise_button(float[4][2], float[4][2], Rect*, int*);
     void render_start();
     void render_credits();
 };

@@ -362,6 +362,7 @@ int main()
 			check_mouse(&e);
 			done = check_keys(&e);
 		}
+		// separate render function for the start, game, and credits screen
 		switch (em.get_screen()) {
 			case start: {
 				em.render_start();
@@ -566,6 +567,8 @@ int check_keys(XEvent *e)
 				int next = (current - 1) + em.get_num_buttons();
 				next %= em.get_num_buttons();
 				em.set_select((enum SelectedButton) next);
+			} else if (em.get_screen() == game) {
+				// game logic for Up arrow here
 			}
 			break;
 		}
@@ -575,6 +578,8 @@ int check_keys(XEvent *e)
 				int next = (current + 1) + em.get_num_buttons();
 				next %= em.get_num_buttons();
 				em.set_select((enum SelectedButton) next);
+			} else if (em.get_screen() == game) {
+				// game logic for Down arrow here
 			}
 			break;
 		}
@@ -585,6 +590,8 @@ int check_keys(XEvent *e)
 				} else if (em.get_select() == credits_button) {
 					em.set_screen(credits);
 				}
+			} else if (em.get_screen() == game) {
+				// game logic for Return key here
 			}
 			break;
 		}
