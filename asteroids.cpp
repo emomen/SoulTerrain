@@ -60,7 +60,8 @@ extern void timeCopy(struct timespec *dest, struct timespec *source);
 extern class Emomen em;
 //-----------------------------------------------------------------------------
 //acardenassil.cpp
-extern void acardenassilName();
+#include "acardenassil.h"
+extern class Acardsill acs;
 //-----------------------------------------------------------------------------
 //nromasanta.cpp
 #include "nromasanta.h"
@@ -74,8 +75,8 @@ public:
 	int xres, yres;
 	char keys[65536];
 	Global() {
-		xres = 640;
-		yres = 480;
+		xres = 800;
+		yres = 800;
 		memset(keys, 0, 65536);
 	}
 } gl;
@@ -344,7 +345,7 @@ void render();
 int main()
 {
 	em.print_name(); // from emomen.cpp
-	acardenassilName(); // alonso: name print
+	acs.name_print(); // alonso: name print
 	nr.nromasanta_print(); // name print from nromasanta.cpp
     //test(); //print "Hello world! " (from iruiz.cpp)
 	sleep(2);
