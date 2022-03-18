@@ -548,13 +548,14 @@ int check_keys(XEvent *e)
 	}
 	(void)shift;
 	switch (key) {
-		case XK_Escape:
+		case XK_Escape: {
 			if (em.get_screen() == start) {
 				return 1;
 			} else {
 				em.set_screen(start);
 			}
 			break;
+		}
 		case XK_f:
 			break;
 		case XK_s:
