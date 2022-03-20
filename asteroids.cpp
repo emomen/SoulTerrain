@@ -266,7 +266,7 @@ public:
 	void set_title() {
 		//Set the window title bar.
 		XMapWindow(dpy, win);
-		XStoreName(dpy, win, "Asteroids template");
+		XStoreName(dpy, win, "Soul Terrain");
 	}
 	void check_resize(XEvent *e) {
 		//The ConfigureNotify is sent by the
@@ -287,6 +287,7 @@ public:
 		glMatrixMode(GL_MODELVIEW); glLoadIdentity();
 		glOrtho(0, gl.xres, 0, gl.yres, -1, 1);
 		set_title();
+		em.set_window_size(width, height); // update window size info
 	}
 	void setup_screen_res(const int w, const int h) {
 		gl.xres = w;
@@ -380,6 +381,7 @@ int main()
 					physicsCountdown -= physicsRate;
 				}
 				render();
+				em.draw_UI(); // draw UI on top of the game
 				break;
 			}
 			case credits: {
@@ -471,6 +473,7 @@ void check_mouse(XEvent *e)
 					b->color[1] = 1.0f;
 					b->color[2] = 1.0f;
 					++g.nbullets;
+					em.reduce_health(); // ONLY FOR UI TESTING, WILL REMOVE
 				}
 			}
 		}

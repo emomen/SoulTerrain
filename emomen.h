@@ -10,6 +10,8 @@
 
 #include <iostream>
 #include <GL/glx.h>
+#include <vector>
+#include <string>
 #include "fonts.h"
 
 enum GameScreen {
@@ -27,9 +29,10 @@ class Emomen {
 private:
     enum GameScreen screen;
     enum SelectedButton select;
-    int num_buttons;
     int xres;
     int yres;
+    std::vector<std::string> button_labels;
+    int health;
 public:
     Emomen();
     // Emomen(int num);
@@ -40,9 +43,14 @@ public:
     enum SelectedButton get_select();
     void set_select(enum SelectedButton);
     int get_num_buttons();
+    void rect_coordinates(float[4][2], float[2], float, float);
     void raise_button(float[4][2], float[4][2], Rect*, int*);
+    void draw_square(float[4][2], float[3]);
+    void create_button(int);
     void render_start();
     void render_credits();
+    void reduce_health();
+    void draw_UI();
 };
 
 #endif
