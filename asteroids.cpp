@@ -121,6 +121,7 @@ public:
 	Vec vert[8];
 	float angle;
 	float rotate;
+	float health;
 	float color[3];
 	struct Asteroid *prev;
 	struct Asteroid *next;
@@ -152,6 +153,7 @@ public:
 		
 		for (int j=0; j<10; j++) {
 			Asteroid *a = new Asteroid;
+			a->health = 100.0;
 			a->nverts = 8;
 			a->radius = rnd()*80.0 + 40.0;
 			Flt r2 = a->radius / 2.0;
@@ -180,7 +182,7 @@ public:
 		
 			//enemyBehavior() defines movement 
 			nr.enemyBehavior(a->vel, a->pos, gl.xres, gl.yres,rnd()); 
-			nr.enemyImage(a->color, 100.0, 0.0, 0.0); //draws enemy appearance
+			//nr.enemyImage(a->color, 100.0, 0.0, 0.0); //draws enemy appearance
 	
 			a->angle = 0.0;
 			a->rotate = rnd() * 4.0 - 2.0;
@@ -349,7 +351,7 @@ int main()
 	em.print_name(); // from emomen.cpp
 	acs.name_print(); // alonso: name print
 	nr.nromasanta_print(); // name print from nromasanta.cpp
-    //test(); //print "Hello world! " (from iruiz.cpp)
+    	//test(); //print "Hello world! " (from iruiz.cpp)
 	sleep(2);
 	logOpen();
 	init_opengl();
@@ -760,9 +762,8 @@ void physics()
 			if (dist < (a->radius*a->radius)) {
 				//std::cout << "asteroid hit." << std::endl;
 				//this asteroid is hit.
-				if (a->radius > MINIMUM_ASTEROID_SIZE) {
-					
-					Asteroid *ta = a;
+				if (a->health>0.0) {
+					/*Asteroid *ta = a;
 					buildAsteroidFragment(ta, a);
 					int r = rand()%10+5;
 					for (int k=0; k<r; k++) {
@@ -775,7 +776,10 @@ void physics()
 							g.ahead->prev = ta;
 						g.ahead = ta;
 						g.nasteroids++;
-					}
+					}*/
+					a->health = (a->health - 20.0);
+					std::cout << "Ghost hit. health is : " <<
+					a->health << std::endl;
 				} else {
 					a->color[0] = 1.0;
 					a->color[1] = 0.1;

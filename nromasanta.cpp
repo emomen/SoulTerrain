@@ -38,9 +38,11 @@ void nromasanta::enemyBehavior(float direction[],float spawn[],int xres,
   int yres,float rnd)
 {
   direction[0] = 2*(rnd*2.0-1.0); // Horizontal Speed
-  direction[1] = 2*(rnd*2.0-1.0); // Vertical Speed
+  //direction[1] = 2*(rnd*2.0-1.0); // Vertical Speed default
+  direction[1] = 0; 
 
   spawn[0] = (rand() % xres); //x axis
+  spawn[0] = xres; //x axis
   spawn[1] = (rand() % yres); //y axis
   spawn[2] = 0.0f;            //dont know yet
 }
