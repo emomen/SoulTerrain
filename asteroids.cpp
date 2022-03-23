@@ -380,6 +380,7 @@ int main()
 					physics();
 					physicsCountdown -= physicsRate;
 				}
+				em.draw_background();
 				render();
 				em.draw_UI(); // draw UI on top of the game
 				break;
@@ -872,7 +873,7 @@ void physics()
 void render()
 {
 	Rect r;
-	glClear(GL_COLOR_BUFFER_BIT);
+	// glClear(GL_COLOR_BUFFER_BIT);
 	//
 	r.bot = gl.yres - 20;
 	r.left = 10;

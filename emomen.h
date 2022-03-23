@@ -11,6 +11,7 @@
 #include <iostream>
 #include <GL/glx.h>
 #include <vector>
+#include <unordered_map>
 #include <string>
 #include "fonts.h"
 
@@ -33,6 +34,8 @@ private:
     int yres;
     std::vector<std::string> button_labels;
     int health;
+    std::vector<float> grass_positions;
+    std::unordered_map<char, std::vector<int>> char_info;
 public:
     Emomen();
     // Emomen(int num);
@@ -44,13 +47,18 @@ public:
     void set_select(enum SelectedButton);
     int get_num_buttons();
     void rect_coordinates(float[4][2], float[2], float, float);
-    void raise_button(float[4][2], float[4][2], Rect*, int*);
-    void draw_square(float[4][2], float[3]);
+    void raise_button(float[4][2], float[4][2]);
+    void draw_rect(float[4][2], float[3]);
+    void draw_text(float[2], float, float, float, float, float[3], std::string);
     void create_button(int);
+    void create_background();
+    void draw_background();
+    void draw_title();
     void render_start();
     void render_credits();
     void reduce_health();
     void draw_UI();
+    void init_char_info();
 };
 
 #endif
