@@ -97,7 +97,7 @@ public:
 		VecZero(dir);
 		VecZero(vel);
 		VecZero(acc);
-		angle = 0.0;
+		angle = -90.0; //default 0.0
 		color[0] = color[1] = color[2] = 1.0;
 	}
 };
@@ -413,7 +413,9 @@ void init_opengl(void)
 	glDisable(GL_CULL_FACE);
 	//
 	//Clear the screen to black
-	glClearColor(0.0, 0.0, 0.0, 1.0);
+	//glClearColor(0.0, 0.0, 0.0, 1.0);
+	//Make screen brown
+	glClearColor(101.0/255.0, 67.0/255.0, 33.0/255.0, 1.0);
 	//Do this to allow fonts
 	glEnable(GL_TEXTURE_2D);
 	initialize_fonts();
@@ -883,6 +885,7 @@ void render()
 	ggprint8b(&r, 16, 0x00ffff00, "n asteroids: %i", g.nasteroids);
 	//-------------------------------------------------------------------------
 	//Draw the ship
+	/*-------GORDON CODE--------
 	glColor3fv(g.ship.color);
 	glPushMatrix();
 	glTranslatef(g.ship.pos[0], g.ship.pos[1], g.ship.pos[2]);
@@ -904,6 +907,9 @@ void render()
 	//glVertex2f(0.0f, 0.0f);
 	//glEnd();
 	glPopMatrix();
+	-------GORDON CODE--------*/
+	nr.drawHunter(g.ship.pos, g.ship.angle);
+
 	if (gl.keys[XK_Up] || g.mouseThrustOn) {
 		int i;
 		//draw thrust
