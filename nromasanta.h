@@ -14,7 +14,7 @@ public:
     void enemyBehavior(float*, float*, int, int, float);
     void enemyImage(float*, float, float, float);
     //void spawnPoint();
-    //void drawEnemies();
+    void drawGhost1(float *);
 };
 
 #endif

@@ -46,4 +46,62 @@ void nromasanta::enemyImage(float color[], float r, float g, float b)
   color[1] = g;
   color[2] = b;
 }
+void nromasanta::drawGhost1(float * pos)
+{
+	//Head
+	glPushMatrix();
+	glTranslatef(pos[0], pos[1], pos[2]); 
+	glColor3f(1.0,1.0,1.0); //Color - White
+	glBegin(GL_POLYGON);    //Body
+	glVertex2f(-10,20);
+	glVertex2f(10, 20);
+	glVertex2f(20, 10);
+	glVertex2f(20, -10);
+	glVertex2f(40, -20);//tip of tail
+	glVertex2f(20, -30);
+	glVertex2f(0, -33);
+	//glVertex2f(0, -40);
+	glVertex2f(-18, -20);
+	glVertex2f(-20, 10);
+
+	glEnd();
+	glPopMatrix();
+	//Mouth - LINE 
+	/*
+	glColor3f(100.0,0.0,0.0);
+	glBegin(GL_LINES);
+	glVertex2f(pos[0]+10, pos[1]-6);
+	glVertex2f(pos[0]-10, pos[1]-6);
+	glEnd(); */
+
+	//Left eye
+	glColor3f(0.0f, 0.0f, 0.0f);
+	glBegin(GL_QUADS);
+	glVertex2f(pos[0]-4, pos[1]+8);
+	glVertex2f(pos[0]-11, pos[1]+13);
+	glVertex2f(pos[0]-15, pos[1]);
+	glVertex2f(pos[0]-7, pos[1]);
+	glEnd();
+	glPopMatrix();
+	
+	//Right eye
+	glBegin(GL_QUADS);
+	glVertex2f(pos[0]+4, pos[1]+8);
+	glVertex2f(pos[0]+11, pos[1]+13);
+	glVertex2f(pos[0]+15, pos[1]);
+	glVertex2f(pos[0]+7, pos[1]);
+	glEnd();
+	glPopMatrix();
+
+	//Mouth
+	glColor3f(0.0f, 0.0f, 0.0f);
+	glPointSize(7);
+        glBegin(GL_POINTS); 
+        glVertex2f(pos[0], pos[1]-8); //Mouth
+	glEnd();
+
+
+}
+
+
 //-----------FUTURE FUNCTIONS-------------

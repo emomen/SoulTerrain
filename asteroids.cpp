@@ -899,9 +899,9 @@ void render()
 	glVertex2f( 12.0f, -10.0f);
 	glEnd();
 	glColor3f(1.0f, 0.0f, 0.0f);
-	glBegin(GL_POINTS);
-	glVertex2f(0.0f, 0.0f);
-	glEnd();
+	//glBegin(GL_POINTS);
+	//glVertex2f(0.0f, 0.0f);
+	//glEnd();
 	glPopMatrix();
 	if (gl.keys[XK_Up] || g.mouseThrustOn) {
 		int i;
@@ -929,27 +929,36 @@ void render()
 	{
 		Asteroid *a = g.ahead;
 		while (a) {
-			//Log("draw asteroid...\n");
-			
+			//Log("draw asteroid...\n");	
+                        //-------------GORDON CODE---------------
+			/*
 			glColor3fv(a->color);
-			glPushMatrix();
-			glTranslatef(a->pos[0], a->pos[1], a->pos[2]); //position of asteroids
-			glRotatef(a->angle, 0.0f, 0.0f, 1.0f); //rotates asteroid
-			glBegin(GL_LINE_LOOP);
-			//Log("%i verts\n",a->nverts);
-			for (int j=0; j<a->nverts; j++) {
-				glVertex2f(a->vert[j][0], a->vert[j][1]);
-			}
-			glEnd();
-			//glBegin(GL_LINES);
-			//	glVertex2f(0,   0);
-			//	glVertex2f(a->radius, 0);
-			//glEnd();
-			glPopMatrix();
-			glColor3f(1.0f, 0.0f, 0.0f);
-			glBegin(GL_POINTS); //red dot in middle of asteroids
-			glVertex2f(a->pos[0], a->pos[1]); 
-			glEnd();
+                        glPushMatrix();
+                        glTranslatef(a->pos[0], a->pos[1], a->pos[2]);
+                        glRotatef(a->angle, 0.0f, 0.0f, 1.0f);
+                        glBegin(GL_LINE_LOOP);
+                        //Log("%i verts\n",a->nverts);
+                        for (int j=0; j<a->nverts; j++) {
+                                glVertex2f(a->vert[j][0], a->vert[j][1]);
+                        }
+                        glEnd();
+                        //glBegin(GL_LINES);
+                        //      glVertex2f(0,   0);
+                        //      glVertex2f(a->radius, 0);
+                        //glEnd();
+                        glPopMatrix();
+                        glColor3f(1.0f, 0.0f, 0.0f);
+                        glBegin(GL_POINTS);
+                        glVertex2f(a->pos[0], a->pos[1]);
+                        glEnd();
+                        */
+			//-------------GORDON CODE---------------
+	
+			
+			
+			
+			
+			nr.drawGhost1(a->pos);
 			a = a->next; 
 		}
 	}
