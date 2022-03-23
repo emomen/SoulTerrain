@@ -155,7 +155,9 @@ public:
 			Asteroid *a = new Asteroid;
 			a->health = 100.0;
 			a->nverts = 8;
-			a->radius = rnd()*80.0 + 40.0;
+			//a->radius = rnd()*80.0 + 40.0;
+			//Tighter Radius for new ghost model
+			a->radius = 40.0;
 			Flt r2 = a->radius / 2.0;
 			Flt angle = 0.0f;
 			Flt inc = (PI * 2.0) / (Flt)a->nverts;
