@@ -58,7 +58,6 @@ public:
     void render_credits();
     void reduce_health();
     void draw_UI();
-    void init_char_info();
 };
 
 #endif
