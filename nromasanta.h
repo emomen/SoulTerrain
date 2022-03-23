@@ -15,6 +15,7 @@ public:
     void enemyImage(float*, float, float, float);
     //void spawnPoint();
     void drawGhost1(float *);
+    void drawHunter(float *,float);
 };
 
 #endif
