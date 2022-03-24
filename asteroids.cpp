@@ -349,7 +349,6 @@ int main()
 	em.set_window_size(gl.xres, gl.yres);
 	em.print_name(); // from emomen.cpp
 	acs.name_print(); // alonso: name print
-	nr.nromasanta_print(); // name print from nromasanta.cpp
     	//test(); //print "Hello world! " (from iruiz.cpp)
 	sleep(2);
 	logOpen();
@@ -706,6 +705,7 @@ void physics()
 		b->pos[0] += b->vel[0];
 		b->pos[1] += b->vel[1];
 		//Check for collision with window edges
+		/*
 		if (b->pos[0] < 0.0) {
 			b->pos[0] += (float)gl.xres;
 		}
@@ -718,6 +718,7 @@ void physics()
 		else if (b->pos[1] > (float)gl.yres) {
 			b->pos[1] -= (float)gl.yres;
 		}
+		*/
 		++i;
 	}
 	//
@@ -761,6 +762,7 @@ void physics()
 				//std::cout << "asteroid hit." << std::endl;
 				//this asteroid is hit.
 				if (a->health>0.0) {
+					//------------GORDON CODE-------------
 					/*Asteroid *ta = a;
 					buildAsteroidFragment(ta, a);
 					int r = rand()%10+5;
@@ -775,6 +777,7 @@ void physics()
 						g.ahead = ta;
 						g.nasteroids++;
 					}*/
+					//------------GORDON CODE-------------
 					a->health = (a->health - 20.0);
 					std::cout << "Ghost hit. health is : " <<
 					a->health << std::endl;
@@ -913,6 +916,8 @@ void render()
 	nr.drawHunter(g.ship.pos, g.ship.angle);
 
 	if (gl.keys[XK_Up] || g.mouseThrustOn) {
+		//-----------GORDON CODE---------------
+		/*
 		int i;
 		//draw thrust
 		Flt rad = ((g.ship.angle+90.0) / 360.0f) * PI * 2.0;
@@ -931,7 +936,10 @@ void render()
 			glVertex2f(g.ship.pos[0]+xs,g.ship.pos[1]+ys);
 			glVertex2f(g.ship.pos[0]+xe,g.ship.pos[1]+ye);
 		}
+		
 		glEnd();
+		*/
+		//-----------GORDON CODE---------------
 	}
 	//-------------------------------------------------------------------------
 	//Draw the asteroids

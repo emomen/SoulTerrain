@@ -9,12 +9,11 @@ class nromasanta
 private:
 public:
     nromasanta();
-    void nromasanta_print();
     void enemyBehavior(float*, float*, int, int, float);
     //void enemyImage(float*, float, float, float);
-    //void spawnPoint();
     void drawGhost(float *, float, float ,float);
     void drawHunter(float *,float);
+    //void drawExplosion(); //Placeholder
 };
 
 #endif

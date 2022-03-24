@@ -16,25 +16,11 @@
 
 #include "nromasanta.h"
 class nromasanta nr;
-/* Example function
-void g_set_ship_color(float r, float g, float b, float *arr)
-{
-  arr[0] = r;
-  arr[1] = g;
-  arr[2] = b;
-  // again
-}*/
 nromasanta::nromasanta()
 {
 //contructor with nothing
 }
 
-void nromasanta::nromasanta_print()
-{
-  std::cout << "Printing name: Nicholas Romasanta" << std::endl;
-}
-
-//TO-DO : Make it so that this changes enemy image
 void nromasanta::enemyBehavior(float direction[],float spawn[],int xres,
   int yres,float rnd)
 {
@@ -51,8 +37,6 @@ void nromasanta::enemyBehavior(float direction[],float spawn[],int xres,
 
 void nromasanta::drawGhost(float * pos, float r, float g, float b)
 {
-	//if enemyType = 1 : basic ghost
-	//if enemyType = 2 : stronger ghost red eyes 
 	//Head
 	glPushMatrix();
 	glTranslatef(pos[0], pos[1], pos[2]); 
@@ -106,6 +90,12 @@ void nromasanta::drawGhost(float * pos, float r, float g, float b)
 	glEnd();
 
 }
+/*
+void nromasanta::drawExplosion(float * pos)
+{
+	//Placeholder
+}
+*/
 
 void nromasanta::drawHunter(float * pos, float angle)
 {
