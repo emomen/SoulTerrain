@@ -33,6 +33,7 @@ void nromasanta::nromasanta_print()
 {
   std::cout << "Printing name: Nicholas Romasanta" << std::endl;
 }
+
 //TO-DO : Make it so that this changes enemy image
 void nromasanta::enemyBehavior(float direction[],float spawn[],int xres,
   int yres,float rnd)
@@ -47,20 +48,15 @@ void nromasanta::enemyBehavior(float direction[],float spawn[],int xres,
   spawn[2] = 0.0f;            //dont know yet
 }
 
-void nromasanta::enemyImage(float color[], float r, float g, float b)
-{
-  //TO-DO : attach an image to each asteroid
-  color[0] = r; // Original : 0.8, 0.8, 0.7
-  color[1] = g;
-  color[2] = b;
-}
 
-void nromasanta::drawGhost1(float * pos)
+void nromasanta::drawGhost(float * pos, float r, float g, float b)
 {
+	//if enemyType = 1 : basic ghost
+	//if enemyType = 2 : stronger ghost red eyes 
 	//Head
 	glPushMatrix();
 	glTranslatef(pos[0], pos[1], pos[2]); 
-	glColor3f(1.0,1.0,1.0); //Color - White
+	glColor3f(r,g,b); //Color - White
 	glBegin(GL_POLYGON);    //Body
 	glVertex2f(-10,20);
 	glVertex2f(10, 20);
@@ -108,7 +104,6 @@ void nromasanta::drawGhost1(float * pos)
         glBegin(GL_POINTS); 
         glVertex2f(pos[0], pos[1]-8); //Mouth
 	glEnd();
-
 
 }
 

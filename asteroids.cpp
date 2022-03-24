@@ -111,25 +111,24 @@ public:
 public:
 	Bullet() { }
 };
-
 class Asteroid {
 public:
-	Vec pos;
-	Vec vel;
-	int nverts;
-	Flt radius;
-	Vec vert[8];
-	float angle;
-	float rotate;
-	float health;
-	float color[3];
-	struct Asteroid *prev;
-	struct Asteroid *next;
+        Vec pos;
+        Vec vel;
+        int nverts;
+        Flt radius;
+        Vec vert[8];
+        float angle;
+        float rotate;
+        float health;
+        float color[3];
+        struct Asteroid *prev;
+        struct Asteroid *next;
 public:
-	Asteroid() {
-		prev = NULL;
-		next = NULL;
-	}
+        Asteroid() {
+                prev = NULL;
+                next = NULL;
+        }
 };
 
 class Game {
@@ -150,7 +149,6 @@ public:
 		nbullets = 0;
 		mouseThrustOn = false;
 		//build 10 asteroids...
-		
 		for (int j=0; j<10; j++) {
 			Asteroid *a = new Asteroid;
 			a->health = 100.0;
@@ -184,7 +182,6 @@ public:
 		
 			//enemyBehavior() defines movement 
 			nr.enemyBehavior(a->vel, a->pos, gl.xres, gl.yres,rnd()); 
-			//nr.enemyImage(a->color, 100.0, 0.0, 0.0); //draws enemy appearance
 	
 			a->angle = 0.0;
 			a->rotate = rnd() * 4.0 - 2.0;
@@ -663,7 +660,6 @@ void buildAsteroidFragment(Asteroid *ta, Asteroid *a)
 	//ta->color[0] = 0.8;
 	//ta->color[1] = 0.8;
 	//ta->color[2] = 0.7;
-	nr.enemyImage(ta->color, 100.0, 200.0, 0); //draws enemy appearance
 	ta->vel[0] = a->vel[0] + (rnd()*2.0-1.0);
 	ta->vel[1] = a->vel[1] + (rnd()*2.0-1.0);
 	//std::cout << "frag" << std::endl;
@@ -966,12 +962,8 @@ void render()
                         glEnd();
                         */
 			//-------------GORDON CODE---------------
-	
-			
-			
-			
-			
-			nr.drawGhost1(a->pos);
+
+			nr.drawGhost(a->pos, 1.0, 1.0, 1.0);
 			em.get_ghost_info(a->pos, a->health);
 			a = a->next; 
 		}
