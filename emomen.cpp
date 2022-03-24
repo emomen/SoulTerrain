@@ -519,7 +519,7 @@ void Emomen::draw_UI()
         ghost_hb.border_color[2] = 1.0;
         ghost_hb.border_thickness = 3.0;
 
-        // draw player health bar
+        // draw ghost health bar
         draw_health_bar(ghost_hb);
     }
 
