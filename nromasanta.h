@@ -13,7 +13,6 @@ public:
     //void enemyImage(float*, float, float, float);
     void drawGhost(float *, float, float ,float);
     void drawHunter(float *,float);
-    //void drawExplosion(); //Placeholder
 };
 
 #endif
