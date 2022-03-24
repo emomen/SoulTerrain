@@ -972,6 +972,7 @@ void render()
 			
 			
 			nr.drawGhost1(a->pos);
+			em.get_ghost_info(a->pos, a->health);
 			a = a->next; 
 		}
 	}

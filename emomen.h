@@ -26,6 +26,18 @@ enum SelectedButton {
     credits_button
 };
 
+struct HealthBarInfo {
+    float top_left[2];
+    float length;
+    float height;
+    float bar[4][2];
+    float bar_color[3];
+    float bar_border[4][2];
+    float border_color[3];
+    float border_thickness;
+    float health;
+};
+
 class Emomen {
 private:
     enum GameScreen screen;
@@ -33,9 +45,12 @@ private:
     int xres;
     int yres;
     std::vector<std::string> button_labels;
-    int health;
+    float player_health;
     std::vector<float> grass_positions;
+    std::vector<float> ghost_info;
     std::unordered_map<char, std::vector<int>> char_info;
+    float leaf_length;
+    float leaf_height;
 public:
     Emomen();
     // Emomen(int num);
@@ -57,6 +72,8 @@ public:
     void render_start();
     void render_credits();
     void reduce_health();
+    void get_ghost_info(float[2], float);
+    void draw_health_bar(HealthBarInfo);
     void draw_UI();
 };
 

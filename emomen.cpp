@@ -19,7 +19,9 @@ Emomen::Emomen()
     yres = 0;
     button_labels.push_back("game");
     button_labels.push_back("credits");
-    health = 20;
+    player_health = 100.0f;
+    leaf_length = 4.0f;
+    leaf_height = 8.0f;
     create_background();
 
     // first number is the number of rectangles needed for each character
@@ -273,6 +275,8 @@ void Emomen::create_background()
     float i_f;
     float j_f;
     float adjustment_f;
+    float save_orientation;
+    int leaf_idle_time = 400; // lower value = grass moves more frequently
 
     // empty vector
     grass_positions.clear();
@@ -288,17 +292,26 @@ void Emomen::create_background()
             adjustment_f = (float) adjustment;
             float top_left1[2] = {j_f, i_f + adjustment_f};
             float top_left2[2] = {j_f + 2, i_f + adjustment_f - 2};
+            save_orientation = 1.0f;
             if (grass_orientation) {
-                top_left2[0] -= 4.0f;
+                top_left2[0] -= leaf_length;
+                save_orientation = -1.0f;
             }
 
             // store grass leaf position in a vector
-            grass_positions.push_back(top_left1[0]);
-            grass_positions.push_back(top_left1[1]);
-            grass_positions.push_back(top_left2[0]);
-            grass_positions.push_back(top_left2[1]);
-            grass_positions.push_back(rand() % 1001 + 500);
-            grass_positions.push_back(0.0f);
+            grass_positions.push_back(top_left1[0]); // grass coords rect1
+            grass_positions.push_back(top_left1[1]); // grass coords rect1
+            grass_positions.push_back(top_left2[0]); // grass coords rect2
+            grass_positions.push_back(top_left2[1]); // grass coords rect2
+            // amount of variation in idle time between blades of grass
+            grass_positions.push_back(rand() % 
+            (leaf_idle_time + 1) + (leaf_idle_time / 2));
+            // counter to determine when a blade of grass
+            // should begin moving
+            grass_positions.push_back((float) (leaf_idle_time / 2));
+            // orientation of blade of grass, used to determine how
+            // grass should move when it does
+            grass_positions.push_back(save_orientation);
         }
     }
 }
@@ -316,20 +329,30 @@ void Emomen::draw_background()
     float grass_blade1[4][2];
     float grass_blade2[4][2];
     float grass_color[3] = {0.329f, 0.219f, 0.518f};
-    float leaf_length = 4.0f;
-    float leaf_height = 8.0f;
+    bool move_leaf = false;
+    int leaf_time = 100; // lower value = grass moves faster
 
     // draw grass with random variation
     srand(time(NULL));
-    for (int i = 0; i < (int) grass_positions.size(); i += 6) {
+    for (int i = 0; i < (int) grass_positions.size(); i += 7) {
         grass_positions[i+5] += 1.0f;
+        // when grass is in movement, grass_positions[i+5] will
+        // be negative. this number is positive when the grass
+        // is idle.
         if (grass_positions[i+5] == grass_positions[i+4]) {
-            if (grass_positions[i] > grass_positions[i+2]) {
-                grass_positions[i] -= leaf_length;
-            } else {
-                grass_positions[i] += leaf_length;
-            }
-            grass_positions[i+5] = 0.0f;
+            grass_positions[i+5] = -leaf_time;
+            move_leaf = true;
+        } else if (grass_positions[i+5] > 0) {
+            move_leaf = false;
+        } else if (grass_positions[i+5] < 0) {
+            move_leaf = true;
+        } else if (grass_positions[i+5] == 0) {
+            grass_positions[i+6] *= -1;
+            move_leaf = false;
+        }
+        if (move_leaf && 
+        ((int) grass_positions[i+5] % (leaf_time / (int) leaf_length) == 0)) {
+            grass_positions[i] += grass_positions[i+6];
         }
         top_left1[0] = grass_positions[i];
         top_left1[1] = grass_positions[i+1];
@@ -404,48 +427,102 @@ void Emomen::render_credits()
 
 void Emomen::reduce_health()
 {
-    health = (health + 20) % 21;
+    player_health = ((int) player_health + 95) % 101;
+}
+
+void Emomen::get_ghost_info(float pos[2], float health)
+{
+    ghost_info.push_back(pos[0]);
+    ghost_info.push_back(pos[1]);
+    ghost_info.push_back(health);
+}
+
+void Emomen::draw_health_bar(HealthBarInfo hb)
+{
+    // hb coordinates
+    rect_coordinates(hb.bar, hb.top_left, hb.health, hb.height);
+    // draw hb
+    draw_rect(hb.bar, hb.bar_color);
+
+    // calculate and draw hb border
+    float border_length = (hb.border_thickness * 2) + hb.length;
+    float border_height = (hb.border_thickness * 2) + hb.height;
+    hb.top_left[0] -= hb.border_thickness;
+    hb.top_left[1] += hb.border_thickness;
+    rect_coordinates(hb.bar_border, hb.top_left, hb.border_thickness,
+    border_height);
+    draw_rect(hb.bar_border, hb.border_color);
+    rect_coordinates(hb.bar_border, hb.top_left, border_length,
+    hb.border_thickness);
+    draw_rect(hb.bar_border, hb.border_color);
+    hb.top_left[0] += border_length;
+    hb.top_left[1] -= border_height;
+    rect_coordinates(hb.bar_border, hb.top_left, -hb.border_thickness,
+    -border_height);
+    draw_rect(hb.bar_border, hb.border_color);
+    rect_coordinates(hb.bar_border, hb.top_left, -border_length,
+    -hb.border_thickness);
+    draw_rect(hb.bar_border, hb.border_color);
 }
 
 void Emomen::draw_UI() 
 {
+    // player health bar
     float top_margin = yres/8;
     float right_margin = xres/10;
-    float bar_length = xres/8;
-    float bar_height = yres/22;
-    float bar[4][2];
-    float bar_border[4][2];
+    HealthBarInfo player_hb = {}; 
+    // health bar length and height
+    player_hb.length = xres/8;
+    player_hb.height = yres/22;
 
-    // calculate remaining health
-    float remaining_health = (health / 20.0) * bar_length;
+    // calculate remaining player_health
+    player_hb.health = (player_health / 100.0f) * player_hb.length;
+    // health bar color
+    player_hb.bar_color[0] = 1.0f; // red
 
     // calculate health bar coordinates
-    float top_left[2];
-    top_left[0] = xres - (right_margin + bar_length);
-    top_left[1] = yres - top_margin;
-    rect_coordinates(bar, top_left, remaining_health, bar_height);
+    player_hb.top_left[0] = xres - (right_margin + player_hb.length);
+    player_hb.top_left[1] = yres - top_margin;
 
-    // draw health bar
-    float bar_color[3] = {1.0, 0.0, 0.0};
-    draw_rect(bar, bar_color);
+    //border styling
+    player_hb.border_color[0] = 1.0;
+    player_hb.border_color[1] = 1.0;
+    player_hb.border_color[2] = 1.0;
+    player_hb.border_thickness = 5.0;
 
-    // draw health bar border
-    float border_color[3] = {1.0, 1.0, 1.0};
-    float border_thickness = 5.0;
-    float border_length = (border_thickness * 2) + bar_length;
-    float border_height = (border_thickness * 2) + bar_height;
-    top_left[0] -= border_thickness;
-    top_left[1] += border_thickness;
-    rect_coordinates(bar_border, top_left, border_thickness,
-    border_height);
-    draw_rect(bar_border, border_color);
-    rect_coordinates(bar_border, top_left, border_length, border_thickness);
-    draw_rect(bar_border, border_color);
-    top_left[0] += border_length;
-    top_left[1] -= border_height;
-    rect_coordinates(bar_border, top_left, -border_thickness,
-    -border_height);
-    draw_rect(bar_border, border_color);
-    rect_coordinates(bar_border, top_left, -border_length, -border_thickness);
-    draw_rect(bar_border, border_color);
+    // draw player health bar
+    draw_health_bar(player_hb);
+
+    // create each of the ghost health bars
+    for (int i = 0; i < (int) ghost_info.size(); i += 3) {
+        // ghost health bar
+        HealthBarInfo ghost_hb = {};
+        // ghost health bar length and height are defined with absolute
+        // numbers to match the absolute size of the ghosts.
+        ghost_hb.length = 30.0f;
+        ghost_hb.height = 10.0f;
+
+        // calculate remaining ghost health
+        ghost_hb.health = (ghost_info[i+2] / 100.0f) * ghost_hb.length;
+        // ghost health bar color
+        ghost_hb.bar_color[0] = 0.925f;
+        ghost_hb.bar_color[1] = 0.255f;
+        ghost_hb.bar_color[2] = 0.463f;
+
+        // calculate ghost health bar coordinates
+        ghost_hb.top_left[0] = ghost_info[i] - 14.0f;
+        ghost_hb.top_left[1] = ghost_info[i+1] + 40.0f;
+
+        // border styling
+        ghost_hb.border_color[0] = 1.0;
+        ghost_hb.border_color[1] = 1.0;
+        ghost_hb.border_color[2] = 1.0;
+        ghost_hb.border_thickness = 3.0;
+
+        // draw player health bar
+        draw_health_bar(ghost_hb);
+    }
+
+    // clear all ghost positional coordinates for the next frame
+    ghost_info.clear();
 }
