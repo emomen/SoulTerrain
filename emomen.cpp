@@ -7,16 +7,15 @@
 
 #include "emomen.h"
 
-class Emomen em; // instantiation without parameters
-// class Emomen em(10); // instantiation with parameters
+class Emomen em;
 
 // Constructors
 Emomen::Emomen()
 {
     screen = start;
     select = game_button;
-    xres = 0;
-    yres = 0;
+    xres = 0;           // set later in set_window_size function
+    yres = 0;           // set later in set_window_size function
     button_labels.push_back("game");
     button_labels.push_back("credits");
     player_health = 100.0f;
@@ -26,7 +25,8 @@ Emomen::Emomen()
 
     // first number is the number of rectangles needed for each character
     // subsequent groups of 4 numbers are the top left x,y coordinates and
-    // length, height of each rectangle
+    // length, height of each rectangle.
+    // characters can be thought of as being drawn in a 5x5 grid.
     char_info['A'].insert(char_info['A'].end(), 
         {4,1,0,1,5,1,0,2,1,1,2,3,1,3,1,1,4});
     char_info['B'].insert(char_info['B'].end(), 
@@ -103,19 +103,6 @@ Emomen::Emomen()
         {5,1,0,3,1,1,2,3,1,1,4,3,1,1,1,1,1,3,1,1,3});
     char_info['0'].insert(char_info['0'].end(), 
         {4,1,0,3,1,1,4,3,1,1,0,1,5,3,0,1,5});
-}
-
-// Emomen::Emomen(int num)
-// {
-//     test_var = num;
-// }
-
-
-// test function to print name
-void Emomen::print_name()
-{
-    std::cout << "Game starting..." << std::endl;
-    std::cout << "Evan Momen" << std::endl;
 }
 
 void Emomen::set_window_size(int x, int y)
@@ -473,7 +460,7 @@ void Emomen::draw_UI()
     HealthBarInfo player_hb = {}; 
     // health bar length and height
     player_hb.length = xres/8;
-    player_hb.height = yres/22;
+    player_hb.height = yres/40;
 
     // calculate remaining player_health
     player_hb.health = (player_health / 100.0f) * player_hb.length;
@@ -485,10 +472,20 @@ void Emomen::draw_UI()
     player_hb.top_left[1] = yres - top_margin;
 
     //border styling
-    player_hb.border_color[0] = 1.0;
-    player_hb.border_color[1] = 1.0;
-    player_hb.border_color[2] = 1.0;
-    player_hb.border_thickness = 5.0;
+    player_hb.border_color[0] = 1.0f;
+    player_hb.border_color[1] = 1.0f;
+    player_hb.border_color[2] = 1.0f;
+    player_hb.border_thickness = player_hb.height/4;
+
+    // draw text above the health bar
+    std::string text = "health";
+    float txt_x_char_size = xres/50;
+    float txt_y_char_size = yres/40;
+    float txt_top_left[2];
+    txt_top_left[0] = player_hb.top_left[0];
+    txt_top_left[1] = player_hb.top_left[1] + yres/30;
+    draw_text(txt_top_left, player_hb.length, player_hb.height, 
+    txt_x_char_size, txt_y_char_size, player_hb.border_color, text);
 
     // draw player health bar
     draw_health_bar(player_hb);
@@ -500,7 +497,7 @@ void Emomen::draw_UI()
         // ghost health bar length and height are defined with absolute
         // numbers to match the absolute size of the ghosts.
         ghost_hb.length = 30.0f;
-        ghost_hb.height = 10.0f;
+        ghost_hb.height = 7.0f;
 
         // calculate remaining ghost health
         ghost_hb.health = (ghost_info[i+2] / 100.0f) * ghost_hb.length;
@@ -511,18 +508,18 @@ void Emomen::draw_UI()
 
         // calculate ghost health bar coordinates
         ghost_hb.top_left[0] = ghost_info[i] - 14.0f;
-        ghost_hb.top_left[1] = ghost_info[i+1] + 40.0f;
+        ghost_hb.top_left[1] = ghost_info[i+1] + 35.0f;
 
         // border styling
-        ghost_hb.border_color[0] = 1.0;
-        ghost_hb.border_color[1] = 1.0;
-        ghost_hb.border_color[2] = 1.0;
-        ghost_hb.border_thickness = 3.0;
+        ghost_hb.border_color[0] = 1.0f;
+        ghost_hb.border_color[1] = 1.0f;
+        ghost_hb.border_color[2] = 1.0f;
+        ghost_hb.border_thickness = 2.0f;
 
         // draw ghost health bar
         draw_health_bar(ghost_hb);
     }
 
-    // clear all ghost positional coordinates for the next frame
+    // clear all ghost information for the next frame
     ghost_info.clear();
 }

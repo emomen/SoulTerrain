@@ -347,9 +347,6 @@ void render();
 int main()
 {
 	em.set_window_size(gl.xres, gl.yres);
-	em.print_name(); // from emomen.cpp
-	acs.name_print(); // alonso: name print
-    	//test(); //print "Hello world! " (from iruiz.cpp)
 	sleep(2);
 	logOpen();
 	init_opengl();
