@@ -292,7 +292,7 @@ public:
 		glMatrixMode(GL_MODELVIEW); glLoadIdentity();
 		glOrtho(0, gl.xres, 0, gl.yres, -1, 1);
 		set_title();
-		em.set_window_size(width, height); // update window size info
+		em.get_window_size(width, height); // update window size info
 	}
 	void setup_screen_res(const int w, const int h) {
 		gl.xres = w;
@@ -350,7 +350,7 @@ void render();
 //==========================================================================
 int main()
 {
-	em.set_window_size(gl.xres, gl.yres);
+	em.get_window_size(gl.xres, gl.yres);
 	sleep(2);
 	logOpen();
 	init_opengl();
@@ -795,6 +795,7 @@ void physics()
 
 					//----Added score counter----//
 					g._score += nr.updateScore(a->ghostClass);
+					em.get_user_score(g._score);
 					std::cout << "Score is: " << g._score << std::endl;
 					
 					//asteroid is too small to break up
@@ -893,15 +894,15 @@ void physics()
 
 void render()
 {
-	Rect r;
+	// Rect r;
 	// glClear(GL_COLOR_BUFFER_BIT);
 	//
-	r.bot = gl.yres - 20;
-	r.left = 10;
-	r.center = 0;
-	ggprint8b(&r, 16, 0x00ff0000, "3350 - Asteroids");
-	ggprint8b(&r, 16, 0x00ffff00, "n bullets: %i", g.nbullets);
-	ggprint8b(&r, 16, 0x00ffff00, "n asteroids: %i", g.nasteroids);
+	// r.bot = gl.yres - 20;
+	// r.left = 10;
+	// r.center = 0;
+	// ggprint8b(&r, 16, 0x00ff0000, "3350 - Asteroids");
+	// ggprint8b(&r, 16, 0x00ffff00, "n bullets: %i", g.nbullets);
+	// ggprint8b(&r, 16, 0x00ffff00, "n asteroids: %i", g.nasteroids);
 	//-------------------------------------------------------------------------
 	//Draw the ship
 	/*-------GORDON CODE--------

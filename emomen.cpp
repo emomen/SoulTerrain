@@ -16,6 +16,7 @@ Emomen::Emomen()
     select = game_button;
     xres = 0;           // set later in set_window_size function
     yres = 0;           // set later in set_window_size function
+    user_score = 0;
     button_labels.push_back("game");
     button_labels.push_back("credits");
     player_health = 100.0f;
@@ -83,6 +84,8 @@ Emomen::Emomen()
         {0});
     char_info['.'].insert(char_info['.'].end(), 
         {1,1,3,2,2});
+    char_info[':'].insert(char_info[':'].end(), 
+        {2,2,1,1,1,2,3,1,1});
     char_info['1'].insert(char_info['1'].end(), 
         {2,1,0,1,1,2,0,1,5});
     char_info['2'].insert(char_info['2'].end(), 
@@ -105,11 +108,16 @@ Emomen::Emomen()
         {4,1,0,3,1,1,4,3,1,1,0,1,5,3,0,1,5});
 }
 
-void Emomen::set_window_size(int x, int y)
+void Emomen::get_window_size(int x, int y)
 {
     xres = x;
     yres = y;
     create_background();
+}
+
+void Emomen::get_user_score(int score)
+{
+    user_score = score;
 }
 
 enum GameScreen Emomen::get_screen()
@@ -481,11 +489,31 @@ void Emomen::draw_UI()
     std::string text = "health";
     float txt_x_char_size = xres/50;
     float txt_y_char_size = yres/40;
+    float txt_color[3];
+    txt_color[0] = 0.337f;
+    txt_color[1] = 0.714f;
+    txt_color[2] = 0.769f;
     float txt_top_left[2];
     txt_top_left[0] = player_hb.top_left[0];
     txt_top_left[1] = player_hb.top_left[1] + yres/30;
     draw_text(txt_top_left, player_hb.length, player_hb.height, 
-    txt_x_char_size, txt_y_char_size, player_hb.border_color, text);
+    txt_x_char_size, txt_y_char_size, txt_color, text);
+
+    // draw score text on left side of screen
+    std::string score_text = "score: ";
+    std::string score_num = std::to_string(user_score);
+    int num_digits = score_num.size();
+    for (int i = 0; i < (5 - num_digits); i++) {
+        score_text += "0";
+    }
+    score_text += score_num;
+    float score_top_left[2];
+    score_top_left[0] = xres - (player_hb.top_left[0] + player_hb.length);
+    score_top_left[1] = player_hb.top_left[1] + yres/30;
+    float score_text_length = player_hb.length * 2;
+    float score_text_height = player_hb.height * 2;
+    draw_text(score_top_left, score_text_length, score_text_height,
+    txt_x_char_size*1.5, txt_y_char_size*1.5, txt_color, score_text);
 
     // draw player health bar
     draw_health_bar(player_hb);

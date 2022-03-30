@@ -44,6 +44,7 @@ private:
     enum SelectedButton select;
     int xres;
     int yres;
+    int user_score;
     std::vector<std::string> button_labels;
     float player_health;
     std::vector<float> grass_positions;
@@ -55,7 +56,8 @@ public:
     Emomen();
     // Emomen(int num);
     void print_name();
-    void set_window_size(int, int);
+    void get_window_size(int, int);
+    void get_user_score(int);
     enum GameScreen get_screen();
     void set_screen(enum GameScreen);
     enum SelectedButton get_select();
