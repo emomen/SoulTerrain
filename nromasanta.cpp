@@ -15,11 +15,30 @@
 
 #include "nromasanta.h"
 class nromasanta nr;
+
 nromasanta::nromasanta()
 {
 //contructor with nothing
 }
 
+int nromasanta::updateScore(int ghostType)
+{
+	//Note: 
+	// - Values are temporary
+	// - The higher value the ghost type, the stronger the enemy
+	// - The stronger the enemy, the more points given
+	// - Once I get more ghost models made, there will be more in here
+	int score;
+	if (ghostType == 1) {
+		score = 100;
+		return score;
+	}
+	//Temporarily adding the bottom 2 lines
+	//to get rid of warning
+	score = 50;
+	return score;		
+
+}
 void nromasanta::enemyBehavior(float direction[],float spawn[],int xres,
   int yres,float rnd)
 {

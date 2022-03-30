@@ -113,6 +113,7 @@ public:
 };
 class Asteroid {
 public:
+	int ghostClass;
         Vec pos;
         Vec vel;
         int nverts;
@@ -138,6 +139,7 @@ public:
 	Bullet *barr;
 	int nasteroids;
 	int nbullets;
+	int _score;
 	struct timespec bulletTimer;
 	struct timespec mouseThrustTimer;
 	bool mouseThrustOn;
@@ -147,12 +149,14 @@ public:
 		barr = new Bullet[MAX_BULLETS];
 		nasteroids = 0;
 		nbullets = 0;
+		_score = 0;
 		mouseThrustOn = false;
 		//build 10 asteroids...
 		for (int j=0; j<10; j++) {
 			Asteroid *a = new Asteroid;
 			a->health = 100.0;
 			a->nverts = 8;
+			a->ghostClass = 1;
 			//a->radius = rnd()*80.0 + 40.0;
 			//Tighter Radius for new ghost model
 			a->radius = 40.0;
@@ -774,20 +778,33 @@ void physics()
 						g.ahead = ta;
 						g.nasteroids++;
 					}*/
-					//------------GORDON CODE-------------
+					//------------------------------------
 					a->health = (a->health - 20.0);
 					std::cout << "Ghost hit. health is : " <<
 					a->health << std::endl;
 				} else {
+					
+					//------------GORDON CODE-------------
+					/*
+					a->health = (a->health - 20.0);
 					a->color[0] = 1.0;
 					a->color[1] = 0.1;
 					a->color[2] = 0.1;
+					*/
+					//------------------------------------
+
+					//----Added score counter----//
+					g._score += nr.updateScore(a->ghostClass);
+					std::cout << "Score is: " << g._score << std::endl;
+					
 					//asteroid is too small to break up
 					//delete the asteroid and bullet
+					
 					Asteroid *savea = a->next;
 					deleteAsteroid(&g, a);
 					a = savea;
 					g.nasteroids--;
+					
 				}
 				//delete the bullet...
 				memcpy(&g.barr[i], &g.barr[g.nbullets-1], sizeof(Bullet));
