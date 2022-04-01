@@ -489,10 +489,7 @@ void Emomen::draw_UI()
     std::string text = "health";
     float txt_x_char_size = xres/50;
     float txt_y_char_size = yres/40;
-    float txt_color[3];
-    txt_color[0] = 0.337f;
-    txt_color[1] = 0.714f;
-    txt_color[2] = 0.769f;
+    float txt_color[3] = {1.0f, 0.643f, 0.369f};
     float txt_top_left[2];
     txt_top_left[0] = player_hb.top_left[0];
     txt_top_left[1] = player_hb.top_left[1] + yres/30;
