@@ -12,6 +12,7 @@
 #include <iostream>
 #include <GL/glx.h>
 #include <cmath>
+#include <string>
 
 #include "nromasanta.h"
 class nromasanta nr;
@@ -19,6 +20,18 @@ class nromasanta nr;
 nromasanta::nromasanta()
 {
 //contructor with nothing
+}
+
+bool nromasanta::_nromasanta(int midterm)
+{
+    //This function checks to see if you got a valid midterm score (0%-100%)
+    if (midterm >= 0 && midterm <= 100) { // assuming there is no curve or extra credit
+        std::cout << "You got a valid score!" << std::endl;
+        return 1; //return true
+    } else {
+        std::cout << "You got an invalid score... how did you do that?" << std::endl;
+        return 0; //return false
+    }
 }
 
 int nromasanta::updateScore(int ghostType)
