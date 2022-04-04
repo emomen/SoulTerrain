@@ -7,6 +7,14 @@
 
 #include "emomen.h"
 
+// function for Midterm - 4/4/22
+void emomen_test(bool test)
+{
+    if (!test) {
+        std::cout << "test failed!" << std::endl;
+    }
+}
+
 class Emomen em;
 
 // Constructors

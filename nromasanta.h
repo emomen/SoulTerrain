@@ -14,6 +14,7 @@ public:
     int updateScore(int);
     void drawGhost(float *, float, float ,float);
     void drawHunter(float *,float);
+    bool _nromasanta(int);
     
 };
 
