@@ -8,13 +8,14 @@
 
 
 //MIDTERM class/////////////////////
-class acardenassil midterm;
+class Acardenassil midterm;
 
-acardenassil::acardenassil()
+Acardenassil::Acardenassil()
 {
     
 }
-int acardenassil::testcameraresolution(int xres, int yres)
+int Acardenassil::testcameraresolution(int winxres, int winyres, 
+		int xres, int yres)
 {
     if (winxres != xres/2)
         return -1;

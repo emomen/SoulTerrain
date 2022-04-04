@@ -73,10 +73,13 @@ extern void test(char *keys);
 class Global {
 public:
 	int xres, yres;
+	int winxres, winyres;
 	char keys[65536];
 	Global() {
-		xres = 640;
-		yres = 480;
+		xres = 1100;
+		yres = 700;
+		winxres = xres/2;
+		winyres = yres/2;
 		memset(keys, 0, 65536);
 	}
 } gl;
@@ -91,8 +94,8 @@ public:
 	float color[3];
 public:
 	Ship() {
-		pos[0] = (Flt)(gl.xres/2);
-		pos[1] = (Flt)(gl.yres/2);
+		pos[0] = (Flt)(gl.winxres/2);
+		pos[1] = (Flt)(gl.winyres/2);
 		pos[2] = 0.0f;
 		VecZero(dir);
 		VecZero(vel);
@@ -185,7 +188,7 @@ public:
 			//------------------------------------------
 		
 			//enemyBehavior() defines movement 
-			nr.enemyBehavior(a->vel, a->pos, gl.xres, gl.yres,rnd()); 
+			nr.enemyBehavior(a->vel, a->pos, gl.winxres, gl.winyres,rnd()); 
 	
 			a->angle = 0.0;
 			a->rotate = rnd() * 4.0 - 2.0;
@@ -218,7 +221,7 @@ public:
 		GLint att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None };
 		//GLint att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, None };
 		XSetWindowAttributes swa;
-		setup_screen_res(gl.xres, gl.yres);
+		setup_screen_res(gl.winxres, gl.winyres);
 		dpy = XOpenDisplay(NULL);
 		if (dpy == NULL) {
 			std::cout << "\n\tcannot connect to X server" << std::endl;
@@ -228,12 +231,12 @@ public:
 		XWindowAttributes getWinAttr;
 		XGetWindowAttributes(dpy, root, &getWinAttr);
 		int fullscreen = 0;
-		gl.xres = w;
-		gl.yres = h;
+		gl.winxres = w;
+		gl.winyres = h;
 		if (!w && !h) {
 			//Go to fullscreen.
-			gl.xres = getWinAttr.width;
-			gl.yres = getWinAttr.height;
+			gl.winxres = getWinAttr.width;
+			gl.winyres = getWinAttr.height;
 			//When window is fullscreen, there is no client window
 			//so keystrokes are linked to the root window.
 			XGrabKeyboard(dpy, root, False,
@@ -255,7 +258,7 @@ public:
 			winops |= CWOverrideRedirect;
 			swa.override_redirect = True;
 		}
-		win = XCreateWindow(dpy, root, 0, 0, gl.xres, gl.yres, 0,
+		win = XCreateWindow(dpy, root, 0, 0, gl.winxres, gl.winyres, 0,
 			vi->depth, InputOutput, vi->visual, winops, &swa);
 		//win = XCreateWindow(dpy, root, 0, 0, gl.xres, gl.yres, 0,
 		//vi->depth, InputOutput, vi->visual, CWColormap | CWEventMask, &swa);
@@ -279,7 +282,7 @@ public:
 		if (e->type != ConfigureNotify)
 			return;
 		XConfigureEvent xce = e->xconfigure;
-		if (xce.width != gl.xres || xce.height != gl.yres) {
+		if (xce.width != gl.winxres || xce.height != gl.winyres) {
 			//Window size did change.
 			reshape_window(xce.width, xce.height);
 		}
@@ -290,13 +293,13 @@ public:
 		glViewport(0, 0, (GLint)width, (GLint)height);
 		glMatrixMode(GL_PROJECTION); glLoadIdentity();
 		glMatrixMode(GL_MODELVIEW); glLoadIdentity();
-		glOrtho(0, gl.xres, 0, gl.yres, -1, 1);
+		glOrtho(0, gl.winxres, 0, gl.winyres, -1, 1);
 		set_title();
 		em.get_window_size(width, height); // update window size info
 	}
 	void setup_screen_res(const int w, const int h) {
-		gl.xres = w;
-		gl.yres = h;
+		gl.winxres = w;
+		gl.winyres = h;
 	}
 	void swapBuffers() {
 		glXSwapBuffers(dpy, win);
@@ -335,7 +338,7 @@ public:
 		//it will undo the last change done by XDefineCursor
 		//(thus do only use ONCE XDefineCursor and then XUndefineCursor):
 	}
-} x11(gl.xres, gl.yres);
+} x11(gl.winxres, gl.winyres);
 // ---> for fullscreen x11(0, 0);
 
 //function prototypes
@@ -350,7 +353,7 @@ void render();
 //==========================================================================
 int main()
 {
-	em.get_window_size(gl.xres, gl.yres);
+	em.get_window_size(gl.winxres, gl.winyres);
 	sleep(2);
 	logOpen();
 	init_opengl();
@@ -401,12 +404,12 @@ int main()
 void init_opengl(void)
 {
 	//OpenGL initialization
-	glViewport(0, 0, gl.xres, gl.yres);
+	glViewport(0, 0, gl.winxres, gl.winyres);
 	//Initialize matrices
 	glMatrixMode(GL_PROJECTION); glLoadIdentity();
 	glMatrixMode(GL_MODELVIEW); glLoadIdentity();
 	//This sets 2D mode (no perspective)
-	glOrtho(0, gl.xres, 0, gl.yres, -1, 1);
+	glOrtho(0, gl.winxres, 0, gl.winyres, -1, 1);
 	//
 	glDisable(GL_LIGHTING);
 	glDisable(GL_DEPTH_TEST);
@@ -673,16 +676,16 @@ void physics()
 	g.ship.pos[1] += g.ship.vel[1];
 	//Check for collision with window edges
 	if (g.ship.pos[0] < 0.0) {
-		g.ship.pos[0] += (float)gl.xres;
+		g.ship.pos[0] += (float)gl.winxres;
 	}
-	else if (g.ship.pos[0] > (float)gl.xres) {
-		g.ship.pos[0] -= (float)gl.xres;
+	else if (g.ship.pos[0] > (float)gl.winxres) {
+		g.ship.pos[0] -= (float)gl.winxres;
 	}
 	else if (g.ship.pos[1] < 0.0) {
-		g.ship.pos[1] += (float)gl.yres;
+		g.ship.pos[1] += (float)gl.winyres;
 	}
-	else if (g.ship.pos[1] > (float)gl.yres) {
-		g.ship.pos[1] -= (float)gl.yres;
+	else if (g.ship.pos[1] > (float)gl.winyres) {
+		g.ship.pos[1] -= (float)gl.winyres;
 	}
 	//
 	//
@@ -730,16 +733,16 @@ void physics()
 		a->pos[1] += a->vel[1];
 		//Check for collision with window edges
 		if (a->pos[0] < -100.0) {
-			a->pos[0] += (float)gl.xres+200;
+			a->pos[0] += (float)gl.winxres+200;
 		}
-		else if (a->pos[0] > (float)gl.xres+100) {
-			a->pos[0] -= (float)gl.xres+200;
+		else if (a->pos[0] > (float)gl.winxres+100) {
+			a->pos[0] -= (float)gl.winxres+200;
 		}
 		else if (a->pos[1] < -100.0) {
-			a->pos[1] += (float)gl.yres+200;
+			a->pos[1] += (float)gl.winyres+200;
 		}
-		else if (a->pos[1] > (float)gl.yres+100) {
-			a->pos[1] -= (float)gl.yres+200;
+		else if (a->pos[1] > (float)gl.winyres+100) {
+			a->pos[1] -= (float)gl.winyres+200;
 		}
 		a->angle += a->rotate;
 		a = a->next;

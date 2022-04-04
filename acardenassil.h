@@ -8,13 +8,13 @@
 
 
 //MIDTERM class//////////////
-class acardenassil
+class Acardenassil
 {
 private:
 public:
-    acardenassil();
-    int testcameraresolution();
-}
+    Acardenassil();
+    int testcameraresolution(int winxres, int winyres, int xres, int yres);
+};
 /////////////////////////////
 
 class Acardsill 
