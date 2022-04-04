@@ -6,6 +6,17 @@
 #ifndef _acardenassil_h_
 #define _acardenassil_h_
 
+
+//MIDTERM class//////////////
+class acardenassil
+{
+private:
+public:
+    acardenassil();
+    int testcameraresolution();
+}
+/////////////////////////////
+
 class Acardsill 
 {
 private:

@@ -5,6 +5,26 @@
 #include <iostream>
 #include "acardenassil.h"
 
+
+
+//MIDTERM class/////////////////////
+class acardenassil midterm;
+
+acardenassil::acardenassil()
+{
+    
+}
+int acardenassil::testcameraresolution(int xres, int yres)
+{
+    if (winxres != xres/2)
+        return -1;
+    if (winyres != yres/2)
+        return -1;
+    return 0;
+}
+//MIDTERM class/////////////////////
+
+
 class Acardsill acs;
 
 Acardsill::Acardsill()
