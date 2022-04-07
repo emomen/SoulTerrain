@@ -58,6 +58,7 @@ extern void timeCopy(struct timespec *dest, struct timespec *source);
 // Importing the Emomen class instance
 #include "emomen.h"
 extern class Emomen em;
+extern void emomen_test(int, int); // Midterm function
 //-----------------------------------------------------------------------------
 //acardenassil.cpp
 #include "acardenassil.h"
@@ -354,6 +355,7 @@ void render();
 int main()
 {
 	em.get_window_size(gl.winxres, gl.winyres);
+	emomen_test(gl.winxres, gl.winyres); // Midterm function call
 	sleep(2);
 	logOpen();
 	init_opengl();

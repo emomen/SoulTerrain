@@ -7,11 +7,14 @@
 
 #include "emomen.h"
 
-// function for Midterm - 4/4/22
-void emomen_test(bool test)
+// function for Midterm
+void emomen_test(int screen_width, int screen_height)
 {
-    if (!test) {
-        std::cout << "test failed!" << std::endl;
+    bool big_mode = (screen_width >= 1000) || (screen_height >= 1000);
+    if (big_mode) {
+        std::cout << "large screen detected" << std::endl;
+    } else {
+        std::cout << "small screen detected" << std::endl;
     }
 }
 
