@@ -24,8 +24,8 @@ nromasanta::nromasanta()
 
 bool nromasanta::nromasanta_midterm(int midterm)
 {
-    //This function checks to see if you got a valid midterm score (0%-100%)
-    if (midterm == 10) { // assuming there is no curve or extra credit
+    //This function checks to see how many 'asteroids' (ghosts) there are
+    if (midterm == 10) { 
         return 1; //return true
     } else {
         return 0; //return false
