@@ -70,6 +70,7 @@ extern class nromasanta nr;
 //-----------------------------------------------------------------------------
 //iruiz.cpp
 extern void test(char *keys);
+extern void iruiz(char *keys);
 //-----------------------------------------------------------------------------
 class Global {
 public:
