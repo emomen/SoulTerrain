@@ -22,7 +22,7 @@ nromasanta::nromasanta()
 //contructor with nothing
 }
 
-bool nromasanta::_nromasanta(int midterm)
+bool nromasanta::nromasanta_midterm(int midterm)
 {
     //This function checks to see if you got a valid midterm score (0%-100%)
     if (midterm >= 0 && midterm <= 100) { // assuming there is no curve or extra credit

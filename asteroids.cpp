@@ -353,6 +353,9 @@ void render();
 //==========================================================================
 int main()
 {
+    //---------- For the midterm ----------
+    std::cout << std::boolalpha <<  nr.nromasanta_midterm(50) << std::endl;
+    //-------------------------------------
 	em.get_window_size(gl.winxres, gl.winyres);
 	sleep(2);
 	logOpen();
