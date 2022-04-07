@@ -92,6 +92,8 @@ public:
 	Vec dir;
 	Vec vel;
 	Vec acc;
+	float radius;
+	int health;
 	float angle;
 	float color[3];
 public:
@@ -102,6 +104,8 @@ public:
 		VecZero(dir);
 		VecZero(vel);
 		VecZero(acc);
+		radius = 50.0;
+		health = 100;
 		angle = -90.0; //default 0.0
 		color[0] = color[1] = color[2] = 1.0;
 	}
@@ -360,6 +364,7 @@ void render();
 //==========================================================================
 int main()
 {
+
 	em.get_window_size(gl.winxres, gl.winyres);
 	emomen_test(gl.winxres, gl.winyres); // Midterm function call
 	sleep(2);
@@ -752,6 +757,9 @@ void physics()
 		else if (a->pos[1] > (float)gl.winyres+100) {
 			a->pos[1] -= (float)gl.winyres+200;
 		}
+		g.ship.health = nr.wizCollision(a->pos, g.ship.pos, 
+					g.ship.radius, g.ship.health);
+		//std::cout << "ship health: " << g.ship.health << std::endl;
 		a->angle += a->rotate;
 		a = a->next;
 	}

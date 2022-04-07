@@ -16,7 +16,7 @@
 
 #include "nromasanta.h"
 class nromasanta nr;
-
+extern class Asteroid a;
 nromasanta::nromasanta()
 {
 //contructor with nothing
@@ -31,6 +31,34 @@ bool nromasanta::nromasanta_midterm(int midterm)
         return 0; //return false
     }
 }
+
+float nromasanta::updateHealth(float health)
+{
+	//The goal is to make it so that different ghost types 
+	//remove a different amount of health
+	
+	//For now, we only have one type of ghost
+	health -= 1;
+	//std::cout << "new health is: " << health << std::endl;
+	return health;
+}
+float nromasanta::wizCollision(float ghostPos[], float wizPos[], float wizRadius, float wizHealth)
+{
+	float d0 = ghostPos[0] - wizPos[0];
+        float d1 = ghostPos[1] - wizPos[1];
+        float dist = (d0*d0 + d1*d1);
+        if (dist < (wizRadius*wizRadius)) {
+		//std::cout <<"Player hit!"<<std::endl;
+		return updateHealth(wizHealth);
+	} 
+	return wizHealth;
+
+	//std::cout << "Ghost pos is: " << ghostPos[0] << std::endl;
+	//std::cout << "Wizard pos is: " << wizPos[1] << std::endl;
+	//if ((ghostPos[0] == wizPos[0]) && (ghostPos[1] == wizPos[1]))
+}
+
+
 
 int nromasanta::updateScore(int ghostType)
 {
@@ -53,14 +81,14 @@ int nromasanta::updateScore(int ghostType)
 void nromasanta::enemyBehavior(float direction[],float spawn[],int xres,
   int yres,float rnd)
 {
-  direction[0] = 2*(rnd*2.0-1.0); // Horizontal Speed
-  //direction[1] = 2*(rnd*2.0-1.0); // Vertical Speed default
-  direction[1] = 0; 
+	direction[0] = 2*(rnd*2.0-1.0); // Horizontal Speed
+  	//direction[1] = 2*(rnd*2.0-1.0); // Vertical Speed default
+  	direction[1] = 0; 
 
-  spawn[0] = (rand() % xres); //x axis
-  spawn[0] = xres; //x axis
-  spawn[1] = (rand() % yres); //y axis
-  spawn[2] = 0.0f;            //dont know yet
+  	spawn[0] = (rand() % xres); //x axis
+  	spawn[0] = xres; //x axis
+  	spawn[1] = (rand() % yres); //y axis
+  	spawn[2] = 0.0f;            //dont know yet
 }
 
 

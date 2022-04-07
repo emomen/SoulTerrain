@@ -4,6 +4,9 @@
 
 #ifndef _nromasanta_h_
 #define _nromasanta_h_
+extern class Asteroid a;
+extern class Game g;
+extern class Ship ship;
 class nromasanta
 {
 private:
@@ -15,7 +18,8 @@ public:
     void drawGhost(float *, float, float ,float);
     void drawHunter(float *,float);
     bool nromasanta_midterm(int);
-    
+    float updateHealth(float);
+    float wizCollision(float *, float *, float, float);
 };
 
 #endif
