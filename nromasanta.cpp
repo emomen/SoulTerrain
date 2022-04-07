@@ -24,7 +24,7 @@ nromasanta::nromasanta()
 
 bool nromasanta::nromasanta_midterm(int midterm)
 {
-    //This function checks to see how many 'asteroids' (ghosts) there are
+    //This function checks to see if there are 10 ghosts (asteroids) on the screen
     if (midterm == 10) { 
         return 1; //return true
     } else {
