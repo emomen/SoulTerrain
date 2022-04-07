@@ -73,7 +73,7 @@ public:
     void draw_title();
     void render_start();
     void render_credits();
-    void reduce_health();
+    void set_health(int);
     void get_ghost_info(float[2], float);
     void draw_health_bar(HealthBarInfo);
     void draw_UI();

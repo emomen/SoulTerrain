@@ -494,7 +494,6 @@ void check_mouse(XEvent *e)
 					b->color[1] = 1.0f;
 					b->color[2] = 1.0f;
 					++g.nbullets;
-					em.reduce_health(); // ONLY FOR UI TESTING, WILL REMOVE
 				}
 			}
 		}
@@ -761,6 +760,7 @@ void physics()
 		g.ship.health = nr.wizCollision(a->pos, g.ship.pos, 
 					g.ship.radius, g.ship.health);
 		//std::cout << "ship health: " << g.ship.health << std::endl;
+		em.set_health(g.ship.health);
 		a->angle += a->rotate;
 		a = a->next;
 	}

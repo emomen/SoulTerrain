@@ -431,9 +431,9 @@ void Emomen::render_credits()
     draw_text(top_left, xres, yres/6, xres/25, yres/25, text_color, text);
 }
 
-void Emomen::reduce_health()
+void Emomen::set_health(int health)
 {
-    player_health = ((int) player_health + 95) % 101;
+    player_health = health;
 }
 
 void Emomen::get_ghost_info(float pos[2], float health)
