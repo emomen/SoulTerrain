@@ -25,12 +25,13 @@ Emomen::Emomen()
 {
     screen = start;
     select = game_button;
-    xres = 0;           // set later in set_window_size function
-    yres = 0;           // set later in set_window_size function
+    xres = 0;           // set later in get_window_size function
+    yres = 0;           // set later in get_window_size function
     user_score = 0;
     button_labels.push_back("game");
     button_labels.push_back("credits");
-    player_health = 100.0f;
+    total_health = 0;       // set later in get_total_health function
+    player_health = 0.0f;   // set every frame
     leaf_length = 4.0f;
     leaf_height = 8.0f;
     create_background();
@@ -117,6 +118,11 @@ Emomen::Emomen()
         {5,1,0,3,1,1,2,3,1,1,4,3,1,1,1,1,1,3,1,1,3});
     char_info['0'].insert(char_info['0'].end(), 
         {4,1,0,3,1,1,4,3,1,1,0,1,5,3,0,1,5});
+}
+
+void Emomen::get_total_health(int health)
+{
+    total_health = health;
 }
 
 void Emomen::get_window_size(int x, int y)
@@ -431,9 +437,13 @@ void Emomen::render_credits()
     draw_text(top_left, xres, yres/6, xres/25, yres/25, text_color, text);
 }
 
-void Emomen::set_health(int health)
+void Emomen::get_health(int health)
 {
-    player_health = health;
+    if (health < 0) {
+        player_health = 0.0f;
+    } else {
+        player_health = health;
+    }
 }
 
 void Emomen::get_ghost_info(float pos[2], float health)
@@ -482,7 +492,7 @@ void Emomen::draw_UI()
     player_hb.height = yres/40;
 
     // calculate remaining player_health
-    player_hb.health = (player_health / 100.0f) * player_hb.length;
+    player_hb.health = (player_health / total_health) * player_hb.length;
     // health bar color
     player_hb.bar_color[0] = 1.0f; // red
 

@@ -46,6 +46,7 @@ private:
     int yres;
     int user_score;
     std::vector<std::string> button_labels;
+    int total_health;
     float player_health;
     std::vector<float> grass_positions;
     std::vector<float> ghost_info;
@@ -56,6 +57,7 @@ public:
     Emomen();
     // Emomen(int num);
     void print_name();
+    void get_total_health(int);
     void get_window_size(int, int);
     void get_user_score(int);
     enum GameScreen get_screen();
@@ -73,7 +75,7 @@ public:
     void draw_title();
     void render_start();
     void render_credits();
-    void set_health(int);
+    void get_health(int);
     void get_ghost_info(float[2], float);
     void draw_health_bar(HealthBarInfo);
     void draw_UI();

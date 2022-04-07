@@ -367,6 +367,7 @@ int main()
 {
 
 	em.get_window_size(gl.winxres, gl.winyres);
+	em.get_total_health(g.ship.health);
 	emomen_test(gl.winxres, gl.winyres); // Midterm function call
 	sleep(2);
 	logOpen();
@@ -760,7 +761,7 @@ void physics()
 		g.ship.health = nr.wizCollision(a->pos, g.ship.pos, 
 					g.ship.radius, g.ship.health);
 		//std::cout << "ship health: " << g.ship.health << std::endl;
-		em.set_health(g.ship.health);
+		em.get_health(g.ship.health);
 		a->angle += a->rotate;
 		a = a->next;
 	}
