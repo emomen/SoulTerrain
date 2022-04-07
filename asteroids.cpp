@@ -81,6 +81,7 @@ public:
 		yres = 700;
 		winxres = xres/2;
 		winyres = yres/2;
+        acs.testcameraresolution(winxres, winyres, xres, yres);
 		memset(keys, 0, 65536);
 	}
 } gl;

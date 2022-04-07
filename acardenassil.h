@@ -6,7 +6,7 @@
 #ifndef _acardenassil_h_
 #define _acardenassil_h_
 
-
+/* OLD CODE from part 1
 //MIDTERM class//////////////
 class Acardenassil
 {
@@ -16,6 +16,8 @@ public:
     int testcameraresolution(int winxres, int winyres, int xres, int yres);
 };
 /////////////////////////////
+*/
+
 
 class Acardsill 
 {
@@ -26,9 +28,14 @@ public:
     // first contribution to game program. Prints my name.
     void name_print();
     // camera() will move the window focus across the global area
-    void camera();
-};
+    //void camera();
 
+
+//###########################  MIDTERM FUNCTION  #######################//
+    int testcameraresolution(int winxres, int winyres, int xres, int yres);
+//////////////////////////////////////////////////////////////////////////
+};
+/*
 class Camera
 {
 private:
@@ -37,4 +44,6 @@ public:
 	Camera();
 	void setPosition();
 };
+*/
+
 #endif

@@ -5,27 +5,6 @@
 #include <iostream>
 #include "acardenassil.h"
 
-
-
-//MIDTERM class/////////////////////
-class Acardenassil midterm;
-
-Acardenassil::Acardenassil()
-{
-    
-}
-int Acardenassil::testcameraresolution(int winxres, int winyres, 
-		int xres, int yres)
-{
-    if (winxres != xres/2)
-        return -1;
-    if (winyres != yres/2)
-        return -1;
-    return 0;
-}
-//MIDTERM class/////////////////////
-
-
 class Acardsill acs;
 
 Acardsill::Acardsill()
@@ -36,7 +15,37 @@ void Acardsill::name_print()
 {
 	std::cout << "Alonso Cardenas Sillas" << std::endl;
 }
+//NEW MIDTERM FUNCTION HERE
+int Acardsill::testcameraresolution(
+        int winxres, int winyres, int xres, int yres)
+{
+    if (winxres != xres/2 || winyres != yres/2) {
+        std::cout << "RESOLUTION ERROR" << std::endl;
+        return -1;
+    }
+    std::cout << "resolution success" << std::endl;
+    return 0;
+}
 
+
+/* OLD CODE from midterm part 1, will delete after midterm week ends
+
+class Acardenassil midterm;
+
+Acardenassil::Acardenassil()
+{
+    
+}
+int Acardenassil::testcameraresolution(
+        int winxres, int winyres, int xres, int yres)
+{
+    if (winxres != xres/2 || winyres != yres/2)
+        return -1;
+    return 0;
+}
+*/
+
+/*
 class Camera camera;
 
 Camera::Camera()
@@ -48,8 +57,11 @@ void Camera::setPosition()
 {
 
 }
+*/
 
-/* //no longer needed
+
+
+/* //credits page followed in class no longer needed
 void Credits::showPage(int xres, int yres) {
 	glColor3ub(255,255,0); //yellow
 	glPushMatrix();
