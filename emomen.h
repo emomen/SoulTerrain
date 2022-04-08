@@ -55,7 +55,6 @@ private:
     float leaf_height;
 public:
     Emomen();
-    // Emomen(int num);
     void print_name();
     void get_total_health(int);
     void get_window_size(int, int);
@@ -73,9 +72,10 @@ public:
     void create_background();
     void draw_background();
     void draw_title();
+    void draw_menu_help();
     void render_start();
     void render_credits();
-    void get_health(int);
+    void emomen_get_health(int);
     void get_ghost_info(float[2], float);
     void draw_health_bar(HealthBarInfo);
     void draw_UI();

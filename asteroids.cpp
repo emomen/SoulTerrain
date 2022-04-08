@@ -58,7 +58,6 @@ extern void timeCopy(struct timespec *dest, struct timespec *source);
 // Importing the Emomen class instance
 #include "emomen.h"
 extern class Emomen em;
-extern void emomen_test(int, int); // Midterm function
 //-----------------------------------------------------------------------------
 //acardenassil.cpp
 #include "acardenassil.h"
@@ -78,8 +77,8 @@ public:
 	int winxres, winyres;
 	char keys[65536];
 	Global() {
-		xres = 1100;
-		yres = 700;
+		xres = 1280;
+		yres = 960;
 		winxres = xres/2;
 		winyres = yres/2;
         acs.testcameraresolution(winxres, winyres, xres, yres);
@@ -368,8 +367,6 @@ int main()
 
 	em.get_window_size(gl.winxres, gl.winyres);
 	em.get_total_health(g.ship.health);
-	emomen_test(gl.winxres, gl.winyres); // Midterm function call
-	sleep(2);
 	logOpen();
 	init_opengl();
 	srand(time(NULL));
@@ -761,7 +758,7 @@ void physics()
 		g.ship.health = nr.wizCollision(a->pos, g.ship.pos, 
 					g.ship.radius, g.ship.health);
 		//std::cout << "ship health: " << g.ship.health << std::endl;
-		em.get_health(g.ship.health);
+		em.emomen_get_health(g.ship.health);
 		a->angle += a->rotate;
 		a = a->next;
 	}

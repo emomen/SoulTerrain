@@ -7,20 +7,21 @@
 
 #include "emomen.h"
 
-// function for Midterm
-void emomen_test(int screen_width, int screen_height)
-{
-    bool big_mode = (screen_width >= 1000) || (screen_height >= 1000);
-    if (big_mode) {
-        std::cout << "large screen detected" << std::endl;
-    } else {
-        std::cout << "small screen detected" << std::endl;
-    }
-}
 
 class Emomen em;
 
-// Constructors
+
+// function for Midterm
+void Emomen::emomen_get_health(int health)
+{
+    if (health < 0) {
+        player_health = 0.0f;
+    } else {
+        player_health = health;
+    }
+}
+
+// Constructor
 Emomen::Emomen()
 {
     screen = start;
@@ -37,8 +38,8 @@ Emomen::Emomen()
     create_background();
 
     // first number is the number of rectangles needed for each character
-    // subsequent groups of 4 numbers are the top left x,y coordinates and
-    // length, height of each rectangle.
+    // subsequent groups of 4 numbers are the top left x,y coordinates
+    // (0-based) and length, height of each rectangle.
     // characters can be thought of as being drawn in a 5x5 grid.
     char_info['A'].insert(char_info['A'].end(), 
         {4,1,0,1,5,1,0,2,1,1,2,3,1,3,1,1,4});
@@ -98,6 +99,10 @@ Emomen::Emomen()
         {1,1,3,2,2});
     char_info[':'].insert(char_info[':'].end(), 
         {2,2,1,1,1,2,3,1,1});
+    char_info['/'].insert(char_info['/'].end(), 
+        {5,0,4,1,1,1,3,1,1,2,2,1,1,3,1,1,1,4,0,1,1});
+    char_info['>'].insert(char_info['>'].end(), 
+        {5,1,0,1,1,1,4,1,1,2,1,1,1,2,3,1,1,3,2,1,1});
     char_info['1'].insert(char_info['1'].end(), 
         {2,1,0,1,1,2,0,1,5});
     char_info['2'].insert(char_info['2'].end(), 
@@ -246,7 +251,7 @@ void Emomen::create_button(int button_num)
 {
     float button_length = xres/3;
     float button_height = yres/7.5;
-    float button_spacing = yres/3;
+    float button_spacing = yres/5;
     float top_margin = yres/3 + yres/20;
     float correct_spacing = top_margin + (button_num * button_spacing);
     float button[4][2];
@@ -280,6 +285,7 @@ void Emomen::create_button(int button_num)
         text_color, button_labels[button_num]);
 }
 
+// create background state info
 void Emomen::create_background()
 {
     int grass_orientation;
@@ -386,10 +392,70 @@ void Emomen::draw_title()
     float top_left[2];
     top_left[0] = 0.0f;
     top_left[1] = yres;
-    draw_text(top_left, xres, yres/6, xres/10, yres/10, text_color, title1);
+    draw_text(top_left, xres, yres/6.0f, xres/10.0f, yres/10.0f, text_color,
+    title1);
     top_left[0] = 0.0f;
-    top_left[1] = yres - yres/6;
-    draw_text(top_left, xres, yres/6, xres/10, yres/10, text_color, title2);
+    top_left[1] = yres - yres/6.0f;
+    draw_text(top_left, xres, yres/6.0f, xres/10.0f, yres/10.0f, text_color,
+    title2);
+}
+
+void Emomen::draw_menu_help()
+{
+    float bottom_margin = yres/20.0f;
+    float textbox_height = yres/15.0f;
+
+    // left column text
+    // float text_color[3] = {0.925f, 0.255f, 0.463f};
+    float text_color[3] = {0.337f, 0.714f, 0.769f};
+    float top_left[2];
+    float left_margin = xres/8.0f;
+    float margin_adjustment; // line up left column
+    // draw 'enter'
+    std::string controls = "enter";
+    margin_adjustment = left_margin / 3.8f; // smaller denom -> text moves left
+    top_left[0] = left_margin - margin_adjustment;
+    top_left[1] = bottom_margin + (3 * textbox_height);
+    draw_text(top_left, xres/5.0f, textbox_height, xres/30.0f, yres/30.0f,
+    text_color, controls);
+    // draw 'up/down'
+    controls = "up/down";
+    top_left[0] = left_margin;
+    top_left[1] = bottom_margin + (2 * textbox_height);
+    draw_text(top_left, xres/5.0f, textbox_height, xres/30.0f, yres/30.0f,
+    text_color, controls);
+    // draw 'esc'
+    controls = "esc";
+    margin_adjustment = left_margin / 1.9f; // smaller denom -> text moves left
+    top_left[0] = left_margin - margin_adjustment;
+    top_left[1] = bottom_margin + textbox_height;
+    draw_text(top_left, xres/5.0f, textbox_height, xres/30.0f, yres/30.0f,
+    text_color, controls);
+
+    // right column text
+    text_color[0] = 1.0f;
+    text_color[1] = 0.643f;
+    text_color[2] = 0.369f;
+    left_margin = xres/2.3f;
+    // draw '> select option'
+    controls = "> select option";
+    top_left[0] = left_margin;
+    top_left[1] = bottom_margin + (3 * textbox_height);
+    draw_text(top_left, 2 * (xres/5.0f), textbox_height, xres/30.0f,
+    yres/30.0f, text_color, controls);
+    // draw '> change option'
+    controls = "> change option";
+    top_left[0] = left_margin;
+    top_left[1] = bottom_margin + (2 * textbox_height);
+    draw_text(top_left, 2 * (xres/5.0f), textbox_height, xres/30.0f,
+    yres/30.0f, text_color, controls);
+    // draw '> back/exit'
+    controls = "> back/exit";
+    margin_adjustment = left_margin / 6.6f;
+    top_left[0] = left_margin - margin_adjustment;
+    top_left[1] = bottom_margin + textbox_height;
+    draw_text(top_left, 2 * (xres/5.0f), textbox_height, xres/30.0f,
+    yres/30.0f, text_color, controls);
 }
 
 // render the start menu
@@ -397,8 +463,9 @@ void Emomen::render_start()
 {
     draw_background();
     draw_title();
+    draw_menu_help();
 
-    // create each of the buttons
+    // create each of the menu buttons
     int num_buttons = button_labels.size();
     for (int i = 0; i < num_buttons; i++) {
         create_button(i);
@@ -435,15 +502,6 @@ void Emomen::render_credits()
     top_left[1] = yres - (yres/4 + yres/2);
     text = "evan momen";
     draw_text(top_left, xres, yres/6, xres/25, yres/25, text_color, text);
-}
-
-void Emomen::get_health(int health)
-{
-    if (health < 0) {
-        player_health = 0.0f;
-    } else {
-        player_health = health;
-    }
 }
 
 void Emomen::get_ghost_info(float pos[2], float health)
@@ -522,7 +580,7 @@ void Emomen::draw_UI()
     std::string score_num = std::to_string(user_score);
     int num_digits = score_num.size();
     for (int i = 0; i < (5 - num_digits); i++) {
-        score_text += "0";
+        score_text += " ";
     }
     score_text += score_num;
     float score_top_left[2];
