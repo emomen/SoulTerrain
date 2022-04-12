@@ -13,10 +13,21 @@
 #include <GL/glx.h>
 #include <cmath>
 #include <string>
-
+#include <ctime>
 #include "nromasanta.h"
 class nromasanta nr;
 extern class Asteroid a;
+const double physicsRate = 1.0 / 60.0;
+const double oobillion = 1.0 / 1e9;
+extern struct timespec timeStart, timeCurrent;
+extern struct timespec timePause;
+extern double physicsCountdown;
+extern double timeSpan;
+extern double timeDiff(struct timespec *start, struct timespec *end);
+extern void timeCopy(struct timespec *dest, struct timespec *source);
+
+
+
 nromasanta::nromasanta()
 {
 //contructor with nothing
@@ -61,24 +72,24 @@ float nromasanta::wizCollision(float ghostPos[], float wizPos[],
 
 
 
-int nromasanta::updateScore(int ghostType)
+int nromasanta::updateScore(int ghostType, double timeAlive)
 {
-	//Note: 
-	// - Values are temporary
+	//Note:
 	// - The higher value the ghost type, the stronger the enemy
-	// - The stronger the enemy, the more points given
-	// - Once I get more ghost models made, there will be more in here
+	// - The longer a ghost is left alive, the less points it gives
+	// - To score the most points, you want to kill the ghosts as fast as possible
+	//std::cout <<"Time alive of this ghost: " << timeAlive << std::endl;
+	//std::cout <<"ghostType " << ghostType << std::endl;
 	int score;
-	if (ghostType == 1) {
-		score = 100;
-		return score;
+	score = 100 - ((timeAlive * 2) * ghostType);
+	if (score < 10) {
+	// Minimum score possible is 10
+	score = 10;
 	}
-	//Temporarily adding the bottom 2 lines
-	//to get rid of warning
-	score = 50;
-	return score;		
-
+	//std::cout << "giving score: " << score << std::endl;
+	return score;
 }
+
 void nromasanta::enemyBehavior(float direction[],float spawn[],int xres,
   int yres,float rnd)
 {

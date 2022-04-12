@@ -150,6 +150,7 @@ public:
 	int nbullets;
 	int _score;
 	struct timespec bulletTimer;
+	struct timespec ghostTimer;
 	struct timespec mouseThrustTimer;
 	bool mouseThrustOn;
 public:
@@ -172,6 +173,8 @@ public:
 			Flt r2 = a->radius / 2.0;
 			Flt angle = 0.0f;
 			Flt inc = (PI * 2.0) / (Flt)a->nverts;
+			//--nromasanta added--//
+			clock_gettime(CLOCK_REALTIME, &ghostTimer);
 			for (int i=0; i<a->nverts; i++) {
 				a->vert[i][0] = sin(angle) * (r2 + rnd() * a->radius);
 				a->vert[i][1] = cos(angle) * (r2 + rnd() * a->radius);
@@ -803,9 +806,13 @@ void physics()
 					a->color[2] = 0.1;
 					*/
 					//------------------------------------
-
+					
+					//--nromasanta added--//
+					struct timespec ghostDie;
+					clock_gettime(CLOCK_REALTIME, &ghostDie);
+					double timeDeath= timeDiff(&g.ghostTimer, &ghostDie);
 					//----Added score counter----//
-					g._score += nr.updateScore(a->ghostClass);
+					g._score += nr.updateScore(a->ghostClass, timeDeath);
 					em.get_user_score(g._score);
 					
 					//asteroid is too small to break up

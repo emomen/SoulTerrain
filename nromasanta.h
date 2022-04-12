@@ -14,7 +14,7 @@ public:
     nromasanta();
     void enemyBehavior(float*, float*, int, int, float);
     //void enemyImage(float*, float, float, float);
-    int updateScore(int);
+    int updateScore(int, double);
     void drawGhost(float *, float, float ,float);
     void drawHunter(float *,float);
     bool nromasanta_midterm(int);
