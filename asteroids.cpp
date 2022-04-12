@@ -207,11 +207,6 @@ public:
 				ahead->prev = a;
 			ahead = a;
 			++nasteroids;
-    			//---------- For the midterm ----------
-			std::cout << "There 10 asteroids (T/F): ";
-			std::cout << std::boolalpha <<
-			       	nr.nromasanta_midterm(nasteroids) << std::endl;
-    			//-------------------------------------
 		}
 		clock_gettime(CLOCK_REALTIME, &bulletTimer);
 	}
@@ -798,8 +793,6 @@ void physics()
 					}*/
 					//------------------------------------
 					a->health = (a->health - 20.0);
-					std::cout << "Ghost hit. health is : " <<
-					a->health << std::endl;
 				} else {
 					
 					//------------GORDON CODE-------------
@@ -814,7 +807,6 @@ void physics()
 					//----Added score counter----//
 					g._score += nr.updateScore(a->ghostClass);
 					em.get_user_score(g._score);
-					std::cout << "Score is: " << g._score << std::endl;
 					
 					//asteroid is too small to break up
 					//delete the asteroid and bullet

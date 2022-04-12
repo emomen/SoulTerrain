@@ -24,12 +24,12 @@ nromasanta::nromasanta()
 
 bool nromasanta::nromasanta_midterm(int midterm)
 {
-    //This function checks to see if there are 10 ghosts (asteroids) on the screen
-    if (midterm == 10) { 
-        return 1; //return true
-    } else {
-        return 0; //return false
-    }
+	//This function checks to see if there are 10 ghosts (asteroids) on the screen
+    	if (midterm == 10) { 
+        	return 1; //return true
+    	} else {
+        	return 0; //return false
+    	}
 }
 
 float nromasanta::updateHealth(float health)
@@ -42,7 +42,8 @@ float nromasanta::updateHealth(float health)
 	//std::cout << "new health is: " << health << std::endl;
 	return health;
 }
-float nromasanta::wizCollision(float ghostPos[], float wizPos[], float wizRadius, float wizHealth)
+float nromasanta::wizCollision(float ghostPos[], float wizPos[], 
+			float wizRadius, float wizHealth)
 {
 	float d0 = ghostPos[0] - wizPos[0];
         float d1 = ghostPos[1] - wizPos[1];
@@ -164,6 +165,15 @@ void nromasanta::drawHunter(float * pos, float angle)
         glTranslatef(pos[0], pos[1], pos[2]);
         glRotatef(angle, 0.0f, 0.0f, 1.0f);
         
+	//Wizard Robe
+	glColor3f(2.0/255.0,7.0/255.0,93.0/255.0);
+	glBegin(GL_POLYGON);	
+        glVertex2f(0.0f, 0.0f);   
+        glVertex2f(50.0f, 0.0f);   //right
+        glVertex2f(50.0f, -50.0f); //Down
+        glVertex2f(28.0f, -40.0f); //Robe nick
+        glVertex2f(0.0f, -40.0f);  //Left finish
+        glEnd();
 	//weapon
 	/*
 	glBegin(GL_QUADS);
