@@ -1012,7 +1012,10 @@ void render()
 	//Draw the bullets
 	for (int i=0; i<g.nbullets; i++) {
 		Bullet *b = &g.barr[i];
+		//----- Gordon's Code -----//
+		/*
 		//Log("draw bullet...\n");
+		//std::cout << "bullet time" << std::endl;
 		glColor3f(1.0, 1.0, 1.0);
 		glBegin(GL_POINTS);
 		glVertex2f(b->pos[0],      b->pos[1]);
@@ -1020,11 +1023,14 @@ void render()
 		glVertex2f(b->pos[0]+1.0f, b->pos[1]);
 		glVertex2f(b->pos[0],      b->pos[1]-1.0f);
 		glVertex2f(b->pos[0],      b->pos[1]+1.0f);
-		glColor3f(0.8, 0.8, 0.8);
+		//glColor3f(0.8, 0.8, 0.8);
 		glVertex2f(b->pos[0]-1.0f, b->pos[1]-1.0f);
 		glVertex2f(b->pos[0]-1.0f, b->pos[1]+1.0f);
 		glVertex2f(b->pos[0]+1.0f, b->pos[1]-1.0f);
 		glVertex2f(b->pos[0]+1.0f, b->pos[1]+1.0f);
 		glEnd();
+		*/
+		nr.drawBullet(b->pos);
+		//----- Gordon's Code -----//
 	}
 }
