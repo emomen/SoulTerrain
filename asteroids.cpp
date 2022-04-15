@@ -74,15 +74,32 @@ extern void iruiz(char *keys);
 class Global {
 public:
 	int xres, yres;
-	int winxres, winyres;
+	int winxres, winyres, dimScale, resFail;
 	char keys[65536];
 	Global() {
-		xres = 1280;
-		yres = 960;
-		winxres = xres/2;
-		winyres = yres/2;
-        acs.testcameraresolution(winxres, winyres, xres, yres);
+		dimScale = 2;
+		setSize(640, 480);
+		/*
+		// camera size (aka window size)
+		winxres = 640;
+		winyres = 480;
+		// World size (beyond just the camera)
+		dimScale = 2; // scale of world size off of the window size
+		xres = acs.setWorldDimension(winxres, dimScale); 
+		yres = acs.setWorldDimension(winyres, dimScale);
+		*/
+		resFail = acs.testCameraResolution(
+				winxres, winyres, xres, yres, dimScale);
+
 		memset(keys, 0, 65536);
+	}
+	void setSize(int x, int y) {
+		winxres = x;
+		winyres = y;
+		xres = acs.setWorldDimension(x, dimScale);
+		yres = acs.setWorldDimension(y, dimScale);
+		resFail = acs.testCameraResolution(
+				winxres, winyres, xres, yres, dimScale);
 	}
 } gl;
 
@@ -274,7 +291,7 @@ public:
 		set_title();
 		glc = glXCreateContext(dpy, vi, NULL, GL_TRUE);
 		glXMakeCurrent(dpy, win, glc);
-		show_mouse_cursor(0);
+		show_mouse_cursor(1);
 	}
 	~X11_wrapper() {
 		XDestroyWindow(dpy, win);
@@ -307,8 +324,11 @@ public:
 		em.get_window_size(width, height); // update window size info
 	}
 	void setup_screen_res(const int w, const int h) {
+		gl.setSize(w, h);
+		/*
 		gl.winxres = w;
 		gl.winyres = h;
+		*/
 	}
 	void swapBuffers() {
 		glXSwapBuffers(dpy, win);
@@ -321,9 +341,11 @@ public:
 		XNextEvent(dpy, &e);
 		return e;
 	}
+	/*
 	void set_mouse_position(int x, int y) {
 		XWarpPointer(dpy, None, win, 0, 0, 0, 0, x, y);
 	}
+	*/
 	void show_mouse_cursor(const int onoff) {
 		if (onoff) {
 			//this removes our own blank cursor.
@@ -370,7 +392,7 @@ int main()
 	srand(time(NULL));
 	clock_gettime(CLOCK_REALTIME, &timePause);
 	clock_gettime(CLOCK_REALTIME, &timeStart);
-	x11.set_mouse_position(100,100);
+	//x11.set_mouse_position(100,100);
 	int done=0;
 	while (!done) {
 		while (x11.getXPending()) {
@@ -452,10 +474,10 @@ void check_mouse(XEvent *e)
 {
 	//Did the mouse move?
 	//Was a mouse button clicked?
-	static int savex = 0;
-	static int savey = 0;
+	//static int savex = 0;
+	//static int savey = 0;
 	//
-	static int ct=0;
+	//static int ct=0;
 	//std::cout << "m" << std::endl << std::flush;
 	if (e->type == ButtonRelease) {
 		return;
@@ -498,6 +520,7 @@ void check_mouse(XEvent *e)
 		}
 	}
 	//keys[XK_Up] = 0;
+	/* Gordon code. Caused issues with resize and also unwanted feature.
 	if (savex != e->xbutton.x || savey != e->xbutton.y) {
 		//Mouse moved
 		int xdiff = savex - e->xbutton.x;
@@ -542,7 +565,8 @@ void check_mouse(XEvent *e)
 		x11.set_mouse_position(100,100);
 		savex = 100;
 		savey = 100;
-	}
+		
+	}*/
 }
 
 int check_keys(XEvent *e)
