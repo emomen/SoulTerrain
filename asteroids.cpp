@@ -425,6 +425,10 @@ int main()
 				em.render_credits();
 				break;
 			}
+			case gameover: {
+				em.render_gameover();
+				break;
+			}
 		}
 		x11.swapBuffers();
 	}
@@ -595,7 +599,7 @@ int check_keys(XEvent *e)
 	(void)shift;
 	switch (key) {
 		case XK_Escape: {
-			if (em.get_screen() == start) {
+			if (em.get_screen() == start || em.get_screen() == gameover) {
 				return 1;
 			} else {
 				em.set_screen(start);

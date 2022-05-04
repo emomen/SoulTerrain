@@ -18,7 +18,8 @@
 enum GameScreen {
     start,
     game,
-    credits
+    credits,
+    gameover
 };
 
 enum SelectedButton {
@@ -75,6 +76,8 @@ public:
     void draw_menu_help();
     void render_start();
     void render_credits();
+    std::string get_score_text();
+    void render_gameover();
     void emomen_get_health(int);
     void get_ghost_info(float[2], float);
     void draw_health_bar(HealthBarInfo);

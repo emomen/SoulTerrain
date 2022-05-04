@@ -14,8 +14,9 @@ class Emomen em;
 // function for Midterm
 void Emomen::emomen_get_health(int health)
 {
-    if (health < 0) {
+    if (health <= 0) {
         player_health = 0.0f;
+        set_screen(gameover);
     } else {
         player_health = health;
     }
@@ -504,6 +505,42 @@ void Emomen::render_credits()
     draw_text(top_left, xres, yres/6, xres/25, yres/25, text_color, text);
 }
 
+std::string Emomen::get_score_text()
+{
+    std::string score_text = "score: ";
+    std::string score_num = std::to_string(user_score);
+    int num_digits = score_num.size();
+    for (int i = 0; i < (4 - num_digits); i++) {
+        score_text += " ";
+    }
+    score_text += score_num;
+    return score_text;
+}
+
+// render the game over screen
+void Emomen::render_gameover()
+{
+    draw_background();
+    
+    float text_color[3] = {1.0f, 0.643f, 0.369f};
+    float top_left[2];
+
+    std::string text = "game";
+    top_left[0] = 0.0f;
+    top_left[1] = yres - yres/5.0f;
+    draw_text(top_left, xres, yres/5.0f, xres/10.0f, yres/10.0f, text_color, text);
+
+    text = "over";
+    top_left[0] = 0.0f;
+    top_left[1] = yres - 2 * yres/5.0f;
+    draw_text(top_left, xres, yres/5.0f, xres/10.0f, yres/10.0f, text_color, text);
+
+    text = get_score_text();
+    top_left[0] = 0.0f;
+    top_left[1] = yres - 3 * yres/5.0f;
+    draw_text(top_left, xres, yres/5.0f, xres/20.0f, yres/20.0f, text_color, text);
+}
+
 void Emomen::get_ghost_info(float pos[2], float health)
 {
     ghost_info.push_back(pos[0]);
@@ -576,13 +613,7 @@ void Emomen::draw_UI()
     txt_x_char_size, txt_y_char_size, txt_color, text);
 
     // draw score text on left side of screen
-    std::string score_text = "score: ";
-    std::string score_num = std::to_string(user_score);
-    int num_digits = score_num.size();
-    for (int i = 0; i < (5 - num_digits); i++) {
-        score_text += " ";
-    }
-    score_text += score_num;
+    std::string score_text = get_score_text();
     float score_top_left[2];
     score_top_left[0] = xres - (player_hb.top_left[0] + player_hb.length);
     score_top_left[1] = player_hb.top_left[1] + yres/30;
