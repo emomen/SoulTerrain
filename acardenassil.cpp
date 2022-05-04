@@ -14,21 +14,21 @@ Acardsill::Acardsill()
 
 void Acardsill::name_print()
 {
-	std::cout << "Alonso Cardenas Sillas" << std::endl;
+    std::cout << "Alonso Cardenas Sillas" << std::endl;
 }
 
 int Acardsill::setWorldDimension(int resDim, int dimMult)
 {
-	return resDim * dimMult;
+    return resDim * dimMult;
 }
 
 void Acardsill::setSize(int x, int y, int scale, int &xres, int &yres, 
-				int &winxres, int &winyres)
+                                            int &winxres, int &winyres)
 {
-	winxres = x;
-	winyres = y;
-	xres = acs.setWorldDimension(x, scale);
-	yres = acs.setWorldDimension(y, scale);
+    winxres = x;
+    winyres = y;
+    xres = acs.setWorldDimension(x, scale);
+    yres = acs.setWorldDimension(y, scale);
 }
 
 //MIDTERM FUNCTION
