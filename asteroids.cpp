@@ -77,30 +77,23 @@ public:
 	int winxres, winyres, dimScale, resFail;
 	char keys[65536];
 	Global() {
-		dimScale = 2;
-		setSize(640, 480);
-		/*
-		// camera size (aka window size)
-		winxres = 640;
-		winyres = 480;
-		// World size (beyond just the camera)
-		dimScale = 2; // scale of world size off of the window size
-		xres = acs.setWorldDimension(winxres, dimScale); 
-		yres = acs.setWorldDimension(winyres, dimScale);
-		*/
-		resFail = acs.testCameraResolution(
-				winxres, winyres, xres, yres, dimScale);
+		dimScale = 2; //window to world ratio
+		int x = 640;
+		int y = 480;
+		//set the world size and game window size
+		acs.setSize(x, y, dimScale, xres, yres, winxres, winyres);
+		resFail = acs.testCameraResolution(dimScale, xres, yres, 
+														winxres, winyres);
 
 		memset(keys, 0, 65536);
 	}
-	void setSize(int x, int y) {
-		winxres = x;
-		winyres = y;
-		xres = acs.setWorldDimension(x, dimScale);
-		yres = acs.setWorldDimension(y, dimScale);
-		resFail = acs.testCameraResolution(
-				winxres, winyres, xres, yres, dimScale);
+	
+	void resetSize(int x, int y) {
+		acs.setSize(x, y, dimScale, xres, yres, winxres, winyres);
+		resFail = acs.testCameraResolution(dimScale, xres, yres, 
+														winxres, winyres);
 	}
+	
 } gl;
 
 class Ship {
@@ -153,9 +146,9 @@ public:
         struct Asteroid *next;
 public:
         Asteroid() {
-                prev = NULL;
-                next = NULL;
-        }
+			prev = NULL;
+			next = NULL;
+		}
 };
 
 class Game {
@@ -324,7 +317,7 @@ public:
 		em.get_window_size(width, height); // update window size info
 	}
 	void setup_screen_res(const int w, const int h) {
-		gl.setSize(w, h);
+		gl.resetSize(w, h);
 		/*
 		gl.winxres = w;
 		gl.winyres = h;
@@ -403,32 +396,37 @@ int main()
 		}
 		// separate render function for the start, game, and credits screen
 		switch (em.get_screen()) {
-			case start: {
-				em.render_start();
-				break;
-			}
-			case game: {
-				clock_gettime(CLOCK_REALTIME, &timeCurrent);
-				timeSpan = timeDiff(&timeStart, &timeCurrent);
-				timeCopy(&timeStart, &timeCurrent);
-				physicsCountdown += timeSpan;
-				while (physicsCountdown >= physicsRate) {
-					physics();
-					physicsCountdown -= physicsRate;
+			case start: 
+				{
+					em.render_start();
+					break;
 				}
-				em.draw_background();
-				render();
-				em.draw_UI(); // draw UI on top of the game
-				break;
-			}
-			case credits: {
-				em.render_credits();
-				break;
-			}
-			case gameover: {
-				em.render_gameover();
-				break;
-			}
+			case game: 
+				{
+					clock_gettime(CLOCK_REALTIME, &timeCurrent);
+					timeSpan = timeDiff(&timeStart, &timeCurrent);
+					timeCopy(&timeStart, &timeCurrent);
+					physicsCountdown += timeSpan;
+					while (physicsCountdown >= physicsRate) {
+						physics();
+						physicsCountdown -= physicsRate;
+					}
+					em.draw_background();
+					render();
+					em.draw_UI(); // draw UI on top of the game
+					break;
+				}
+			case credits: 
+				{
+					em.render_credits();
+					break;
+				}
+			case gameover: 
+				{
+					em.render_gameover();
+					break;
+				}
+
 		}
 		x11.swapBuffers();
 	}
@@ -525,51 +523,51 @@ void check_mouse(XEvent *e)
 	}
 	//keys[XK_Up] = 0;
 	/* Gordon code. Caused issues with resize and also unwanted feature.
-	if (savex != e->xbutton.x || savey != e->xbutton.y) {
-		//Mouse moved
-		int xdiff = savex - e->xbutton.x;
-		int ydiff = savey - e->xbutton.y;
-		if (++ct < 10)
-			return;
-		//std::cout << "savex: " << savex << std::endl << std::flush;
-		//std::cout << "e->xbutton.x: " << e->xbutton.x << std::endl <<
-		//std::flush;
-		if (xdiff > 0) {
-			//std::cout << "xdiff: " << xdiff << std::endl << std::flush;
-			g.ship.angle += 0.05f * (float)xdiff;
-			if (g.ship.angle >= 360.0f)
-				g.ship.angle -= 360.0f;
-		}
-		else if (xdiff < 0) {
-			//std::cout << "xdiff: " << xdiff << std::endl << std::flush;
-			g.ship.angle += 0.05f * (float)xdiff;
-			if (g.ship.angle < 0.0f)
-				g.ship.angle += 360.0f;
-		}
-		if (ydiff > 0) {
-			//apply thrust
-			//convert ship angle to radians
-			Flt rad = ((g.ship.angle+90.0) / 360.0f) * PI * 2.0;
-			//convert angle to a vector
-			Flt xdir = cos(rad);
-			Flt ydir = sin(rad);
-			g.ship.vel[0] += xdir * (float)ydiff * 0.01f;
-			g.ship.vel[1] += ydir * (float)ydiff * 0.01f;
-			Flt speed = sqrt(g.ship.vel[0]*g.ship.vel[0]+
-												g.ship.vel[1]*g.ship.vel[1]);
-			if (speed > 10.0f) {
-				speed = 10.0f;
-				normalize2d(g.ship.vel);
-				g.ship.vel[0] *= speed;
-				g.ship.vel[1] *= speed;
-			}
-			g.mouseThrustOn = true;
-			clock_gettime(CLOCK_REALTIME, &g.mouseThrustTimer);
-		}
-		x11.set_mouse_position(100,100);
-		savex = 100;
-		savey = 100;
-		
+	   if (savex != e->xbutton.x || savey != e->xbutton.y) {
+	//Mouse moved
+	int xdiff = savex - e->xbutton.x;
+	int ydiff = savey - e->xbutton.y;
+	if (++ct < 10)
+	return;
+	//std::cout << "savex: " << savex << std::endl << std::flush;
+	//std::cout << "e->xbutton.x: " << e->xbutton.x << std::endl <<
+	//std::flush;
+	if (xdiff > 0) {
+	//std::cout << "xdiff: " << xdiff << std::endl << std::flush;
+	g.ship.angle += 0.05f * (float)xdiff;
+	if (g.ship.angle >= 360.0f)
+	g.ship.angle -= 360.0f;
+	}
+	else if (xdiff < 0) {
+	//std::cout << "xdiff: " << xdiff << std::endl << std::flush;
+	g.ship.angle += 0.05f * (float)xdiff;
+	if (g.ship.angle < 0.0f)
+	g.ship.angle += 360.0f;
+	}
+	if (ydiff > 0) {
+	//apply thrust
+	//convert ship angle to radians
+	Flt rad = ((g.ship.angle+90.0) / 360.0f) * PI * 2.0;
+	//convert angle to a vector
+	Flt xdir = cos(rad);
+	Flt ydir = sin(rad);
+	g.ship.vel[0] += xdir * (float)ydiff * 0.01f;
+	g.ship.vel[1] += ydir * (float)ydiff * 0.01f;
+	Flt speed = sqrt(g.ship.vel[0]*g.ship.vel[0]+
+	g.ship.vel[1]*g.ship.vel[1]);
+	if (speed > 10.0f) {
+	speed = 10.0f;
+	normalize2d(g.ship.vel);
+	g.ship.vel[0] *= speed;
+	g.ship.vel[1] *= speed;
+	}
+	g.mouseThrustOn = true;
+	clock_gettime(CLOCK_REALTIME, &g.mouseThrustTimer);
+	}
+	x11.set_mouse_position(100,100);
+	savex = 100;
+	savey = 100;
+
 	}*/
 }
 
@@ -598,52 +596,56 @@ int check_keys(XEvent *e)
 	}
 	(void)shift;
 	switch (key) {
-		case XK_Escape: {
-			if (em.get_screen() == start || em.get_screen() == gameover) {
-				return 1;
-			} else {
-				em.set_screen(start);
+		case XK_Escape: 
+			{
+				if (em.get_screen() == start || em.get_screen() == gameover) {
+					return 1;
+				} else {
+					em.set_screen(start);
+				}
+				break;
 			}
-			break;
-		}
 		case XK_f:
 			break;
 		case XK_s:
 			break;
-		case XK_Up: {
-			if (em.get_screen() == start) {
-				enum SelectedButton current = em.get_select();
-				int next = (current - 1) + em.get_num_buttons();
-				next %= em.get_num_buttons();
-				em.set_select((enum SelectedButton) next);
-			} else if (em.get_screen() == game) {
-				// game logic for Up arrow here
-			}
-			break;
-		}
-		case XK_Down: {
-			if (em.get_screen() == start) {
-				enum SelectedButton current = em.get_select();
-				int next = (current + 1) + em.get_num_buttons();
-				next %= em.get_num_buttons();
-				em.set_select((enum SelectedButton) next);
-			} else if (em.get_screen() == game) {
-				// game logic for Down arrow here
-			}
-			break;
-		}
-		case XK_Return: {
-			if (em.get_screen() == start) {
-				if (em.get_select() == game_button) {
-					em.set_screen(game);
-				} else if (em.get_select() == credits_button) {
-					em.set_screen(credits);
+		case XK_Up: 
+			{
+				if (em.get_screen() == start) {
+					enum SelectedButton current = em.get_select();
+					int next = (current - 1) + em.get_num_buttons();
+					next %= em.get_num_buttons();
+					em.set_select((enum SelectedButton) next);
+				} else if (em.get_screen() == game) {
+					// game logic for Up arrow here
 				}
-			} else if (em.get_screen() == game) {
-				// game logic for Return key here
+				break;
 			}
-			break;
-		}
+		case XK_Down: 
+			{
+				if (em.get_screen() == start) {
+					enum SelectedButton current = em.get_select();
+					int next = (current + 1) + em.get_num_buttons();
+					next %= em.get_num_buttons();
+					em.set_select((enum SelectedButton) next);
+				} else if (em.get_screen() == game) {
+					// game logic for Down arrow here
+				}
+				break;
+			}
+		case XK_Return: 
+			{
+				if (em.get_screen() == start) {
+					if (em.get_select() == game_button) {
+						em.set_screen(game);
+					} else if (em.get_select() == credits_button) {
+						em.set_screen(credits);
+					}
+				} else if (em.get_screen() == game) {
+					// game logic for Return key here
+				}
+				break;
+			}
 		case XK_equal:
 			break;
 		case XK_minus:
@@ -736,8 +738,7 @@ void physics()
 		double ts = timeDiff(&b->time, &bt);
 		if (ts > 2.5) {
 			//time to delete the bullet.
-			memcpy(&g.barr[i], &g.barr[g.nbullets-1],
-				sizeof(Bullet));
+			memcpy(&g.barr[i], &g.barr[g.nbullets-1], sizeof(Bullet));
 			g.nbullets--;
 			//do not increment i.
 			continue;
@@ -747,19 +748,19 @@ void physics()
 		b->pos[1] += b->vel[1];
 		//Check for collision with window edges
 		/*
-		if (b->pos[0] < 0.0) {
-			b->pos[0] += (float)gl.xres;
-		}
-		else if (b->pos[0] > (float)gl.xres) {
-			b->pos[0] -= (float)gl.xres;
-		}
-		else if (b->pos[1] < 0.0) {
-			b->pos[1] += (float)gl.yres;
-		}
-		else if (b->pos[1] > (float)gl.yres) {
-			b->pos[1] -= (float)gl.yres;
-		}
-		*/
+		   if (b->pos[0] < 0.0) {
+		   b->pos[0] += (float)gl.xres;
+		   }
+		   else if (b->pos[0] > (float)gl.xres) {
+		   b->pos[0] -= (float)gl.xres;
+		   }
+		   else if (b->pos[1] < 0.0) {
+		   b->pos[1] += (float)gl.yres;
+		   }
+		   else if (b->pos[1] > (float)gl.yres) {
+		   b->pos[1] -= (float)gl.yres;
+		   }
+		   */
 		++i;
 	}
 	//
@@ -782,7 +783,7 @@ void physics()
 			a->pos[1] -= (float)gl.winyres+200;
 		}
 		g.ship.health = nr.wizCollision(a->pos, g.ship.pos, 
-					g.ship.radius, g.ship.health);
+				g.ship.radius, g.ship.health);
 		//std::cout << "ship health: " << g.ship.health << std::endl;
 		em.emomen_get_health(g.ship.health);
 		a->angle += a->rotate;
@@ -809,32 +810,32 @@ void physics()
 				if (a->health>0.0) {
 					//------------GORDON CODE-------------
 					/*Asteroid *ta = a;
+					  buildAsteroidFragment(ta, a);
+					  int r = rand()%10+5;
+					  for (int k=0; k<r; k++) {
+					//get the next asteroid position in the array
+					Asteroid *ta = new Asteroid;
 					buildAsteroidFragment(ta, a);
-					int r = rand()%10+5;
-					for (int k=0; k<r; k++) {
-						//get the next asteroid position in the array
-						Asteroid *ta = new Asteroid;
-						buildAsteroidFragment(ta, a);
-						//add to front of asteroid linked list
-						ta->next = g.ahead;
-						if (g.ahead != NULL)
-							g.ahead->prev = ta;
-						g.ahead = ta;
-						g.nasteroids++;
+					//add to front of asteroid linked list
+					ta->next = g.ahead;
+					if (g.ahead != NULL)
+					g.ahead->prev = ta;
+					g.ahead = ta;
+					g.nasteroids++;
 					}*/
 					//------------------------------------
 					a->health = (a->health - 20.0);
 				} else {
-					
+
 					//------------GORDON CODE-------------
 					/*
-					a->health = (a->health - 20.0);
-					a->color[0] = 1.0;
-					a->color[1] = 0.1;
-					a->color[2] = 0.1;
-					*/
+					   a->health = (a->health - 20.0);
+					   a->color[0] = 1.0;
+					   a->color[1] = 0.1;
+					   a->color[2] = 0.1;
+					   */
 					//------------------------------------
-					
+
 					//--nromasanta added--//
 					struct timespec ghostDie;
 					clock_gettime(CLOCK_REALTIME, &ghostDie);
@@ -842,15 +843,15 @@ void physics()
 					//----Added score counter----//
 					g._score += nr.updateScore(a->ghostClass, timeDeath);
 					em.get_user_score(g._score);
-					
+
 					//asteroid is too small to break up
 					//delete the asteroid and bullet
-					
+
 					Asteroid *savea = a->next;
 					deleteAsteroid(&g, a);
 					a = savea;
 					g.nasteroids--;
-					
+
 				}
 				//delete the bullet...
 				memcpy(&g.barr[i], &g.barr[g.nbullets-1], sizeof(Bullet));
@@ -951,9 +952,9 @@ void render()
 	//-------------------------------------------------------------------------
 	//Draw the ship
 	/*-------GORDON CODE--------
-	glColor3fv(g.ship.color);
-	glPushMatrix();
-	glTranslatef(g.ship.pos[0], g.ship.pos[1], g.ship.pos[2]);
+	  glColor3fv(g.ship.color);
+	  glPushMatrix();
+	  glTranslatef(g.ship.pos[0], g.ship.pos[1], g.ship.pos[2]);
 	//float angle = atan2(ship.dir[1], ship.dir[0]);
 	glRotatef(g.ship.angle, 0.0f, 0.0f, 1.0f);
 	glBegin(GL_TRIANGLES);
@@ -978,7 +979,7 @@ void render()
 	if (gl.keys[XK_Up] || g.mouseThrustOn) {
 		//-----------GORDON CODE---------------
 		/*
-		int i;
+		   int i;
 		//draw thrust
 		Flt rad = ((g.ship.angle+90.0) / 360.0f) * PI * 2.0;
 		//convert angle to a vector
@@ -987,16 +988,16 @@ void render()
 		Flt xs,ys,xe,ye,r;
 		glBegin(GL_LINES);
 		for (i=0; i<16; i++) {
-			xs = -xdir * 11.0f + rnd() * 4.0 - 2.0;
-			ys = -ydir * 11.0f + rnd() * 4.0 - 2.0;
-			r = rnd()*40.0+40.0;
-			xe = -xdir * r + rnd() * 18.0 - 9.0;
-			ye = -ydir * r + rnd() * 18.0 - 9.0;
-			glColor3f(rnd()*.3+.7, rnd()*.3+.7, 0);
-			glVertex2f(g.ship.pos[0]+xs,g.ship.pos[1]+ys);
-			glVertex2f(g.ship.pos[0]+xe,g.ship.pos[1]+ye);
+		xs = -xdir * 11.0f + rnd() * 4.0 - 2.0;
+		ys = -ydir * 11.0f + rnd() * 4.0 - 2.0;
+		r = rnd()*40.0+40.0;
+		xe = -xdir * r + rnd() * 18.0 - 9.0;
+		ye = -ydir * r + rnd() * 18.0 - 9.0;
+		glColor3f(rnd()*.3+.7, rnd()*.3+.7, 0);
+		glVertex2f(g.ship.pos[0]+xs,g.ship.pos[1]+ys);
+		glVertex2f(g.ship.pos[0]+xe,g.ship.pos[1]+ye);
 		}
-		
+
 		glEnd();
 		*/
 		//-----------GORDON CODE---------------
@@ -1007,28 +1008,28 @@ void render()
 		Asteroid *a = g.ahead;
 		while (a) {
 			//Log("draw asteroid...\n");	
-                        //-------------GORDON CODE---------------
+			//-------------GORDON CODE---------------
 			/*
-			glColor3fv(a->color);
-                        glPushMatrix();
-                        glTranslatef(a->pos[0], a->pos[1], a->pos[2]);
-                        glRotatef(a->angle, 0.0f, 0.0f, 1.0f);
-                        glBegin(GL_LINE_LOOP);
-                        //Log("%i verts\n",a->nverts);
-                        for (int j=0; j<a->nverts; j++) {
-                                glVertex2f(a->vert[j][0], a->vert[j][1]);
-                        }
-                        glEnd();
-                        //glBegin(GL_LINES);
-                        //      glVertex2f(0,   0);
-                        //      glVertex2f(a->radius, 0);
-                        //glEnd();
-                        glPopMatrix();
-                        glColor3f(1.0f, 0.0f, 0.0f);
-                        glBegin(GL_POINTS);
-                        glVertex2f(a->pos[0], a->pos[1]);
-                        glEnd();
-                        */
+			   glColor3fv(a->color);
+			   glPushMatrix();
+			   glTranslatef(a->pos[0], a->pos[1], a->pos[2]);
+			   glRotatef(a->angle, 0.0f, 0.0f, 1.0f);
+			   glBegin(GL_LINE_LOOP);
+			//Log("%i verts\n",a->nverts);
+			for (int j=0; j<a->nverts; j++) {
+			glVertex2f(a->vert[j][0], a->vert[j][1]);
+			}
+			glEnd();
+			//glBegin(GL_LINES);
+			//glVertex2f(0,   0);
+			//glVertex2f(a->radius, 0);
+			//glEnd();
+			glPopMatrix();
+			glColor3f(1.0f, 0.0f, 0.0f);
+			glBegin(GL_POINTS);
+			glVertex2f(a->pos[0], a->pos[1]);
+			glEnd();
+			*/
 			//-------------GORDON CODE---------------
 
 			nr.drawGhost(a->pos, 1.0, 1.0, 1.0);
