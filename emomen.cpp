@@ -528,17 +528,20 @@ void Emomen::render_gameover()
     std::string text = "game";
     top_left[0] = 0.0f;
     top_left[1] = yres - yres/5.0f;
-    draw_text(top_left, xres, yres/5.0f, xres/10.0f, yres/10.0f, text_color, text);
+    draw_text(top_left, xres, yres/5.0f, xres/10.0f, yres/10.0f, text_color,
+    text);
 
     text = "over";
     top_left[0] = 0.0f;
     top_left[1] = yres - 2 * yres/5.0f;
-    draw_text(top_left, xres, yres/5.0f, xres/10.0f, yres/10.0f, text_color, text);
+    draw_text(top_left, xres, yres/5.0f, xres/10.0f, yres/10.0f, text_color,
+    text);
 
     text = get_score_text();
     top_left[0] = 0.0f;
     top_left[1] = yres - 3 * yres/5.0f;
-    draw_text(top_left, xres, yres/5.0f, xres/20.0f, yres/20.0f, text_color, text);
+    draw_text(top_left, xres, yres/5.0f, xres/20.0f, yres/20.0f, text_color,
+    text);
 }
 
 void Emomen::get_ghost_info(float pos[2], float health)
