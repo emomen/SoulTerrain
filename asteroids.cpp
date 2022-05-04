@@ -68,8 +68,8 @@ extern class Acardsill acs;
 extern class nromasanta nr;
 //-----------------------------------------------------------------------------
 //iruiz.cpp
-extern void test(char *keys);
-extern void iruiz(char *keys);
+#include "iruiz.h"
+extern class Iruiz ir;
 //-----------------------------------------------------------------------------
 class Global {
 public:
@@ -761,6 +761,7 @@ void physics()
     }
     //---------------------------------------------------
     //check keys pressed now
+    /*-------------GORDON CODE------------------
     if (gl.keys[XK_Left]) {
         g.ship.angle += 4.0;
         if (g.ship.angle >= 360.0f)
@@ -789,6 +790,19 @@ void physics()
             g.ship.vel[1] *= speed;
         }
     }
+    ------------------------------------*/
+    //------------iruiz added------------
+    ir.movement(gl.keys, g.ship.vel);
+    //-----speed normalizer for ship from lines 784-791  moved here------
+    Flt speed = sqrt(g.ship.vel[0]*g.ship.vel[0]+
+            g.ship.vel[1]*g.ship.vel[1]);
+    if (speed > 10.0f) {
+        speed = 10.0f;
+        normalize2d(g.ship.vel);
+        g.ship.vel[0] *= speed;
+        g.ship.vel[1] *= speed;
+    }
+    //-----------------------------------
     if (gl.keys[XK_space]) {
         //a little time between each bullet
         struct timespec bt;
