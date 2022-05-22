@@ -1,19 +1,18 @@
-// File: emomen.h
+// File: ui.h
 // Author: Evan Momen
 // Date: 2022
 //
 // This file defines the class variables and function prototypes of the
-// Emomen class. It has an include guard and no executable code.
+// UI class. It has an include guard and no executable code.
 
-#ifndef _emomen_h_
-#define _emomen_h_
+#ifndef _ui_h_
+#define _ui_h_
 
 #include <iostream>
 #include <GL/glx.h>
 #include <vector>
 #include <unordered_map>
 #include <string>
-#include "fonts.h"
 
 enum GameScreen {
     start,
@@ -39,7 +38,7 @@ struct HealthBarInfo {
     float health;
 };
 
-class Emomen {
+class UI {
 private:
     enum GameScreen screen;
     enum SelectedButton select;
@@ -55,7 +54,7 @@ private:
     float leaf_length;
     float leaf_height;
 public:
-    Emomen();
+    UI();
     void print_name();
     void get_total_health(int);
     void get_window_size(int, int);
@@ -78,7 +77,7 @@ public:
     void render_credits();
     std::string get_score_text();
     void render_gameover();
-    void emomen_get_health(int);
+    void get_health(int);
     void get_ghost_info(float[2], float);
     void draw_health_bar(HealthBarInfo);
     void draw_UI();

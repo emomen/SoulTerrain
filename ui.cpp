@@ -1,29 +1,17 @@
-// File: emomen.cpp
+// File: ui.cpp
 // Author: Evan Momen
 // Date: 2022
 // 
-// This file defines the implementation of the Emomen class and
+// This file defines the implementation of the UI class and
 // instantiates it.
 
-#include "emomen.h"
+#include "ui.h"
 
 
-class Emomen em;
-
-
-// function for Midterm
-void Emomen::emomen_get_health(int health)
-{
-    if (health <= 0) {
-        player_health = 0.0f;
-        set_screen(gameover);
-    } else {
-        player_health = health;
-    }
-}
+class UI ui;
 
 // Constructor
-Emomen::Emomen()
+UI::UI()
 {
     screen = start;
     select = game_button;
@@ -126,51 +114,61 @@ Emomen::Emomen()
         {4,1,0,3,1,1,4,3,1,1,0,1,5,3,0,1,5});
 }
 
-void Emomen::get_total_health(int health)
+void UI::get_total_health(int health)
 {
     total_health = health;
 }
 
-void Emomen::get_window_size(int x, int y)
+void UI::get_window_size(int x, int y)
 {
     xres = x;
     yres = y;
     create_background();
 }
 
-void Emomen::get_user_score(int score)
+void UI::get_user_score(int score)
 {
     user_score = score;
 }
 
-enum GameScreen Emomen::get_screen()
+void UI::get_health(int health)
+{
+    if (health <= 0) {
+        player_health = 0.0f;
+        set_screen(gameover);
+    } else {
+        player_health = health;
+    }
+}
+
+enum GameScreen UI::get_screen()
 {
     return screen;
 }
 
-void Emomen::set_screen(enum GameScreen scr)
+void UI::set_screen(enum GameScreen scr)
 {
     screen = scr;
 }
 
-enum SelectedButton Emomen::get_select()
+enum SelectedButton UI::get_select()
 {
     return select;
 }
 
-void Emomen::set_select(enum SelectedButton sel)
+void UI::set_select(enum SelectedButton sel)
 {
     select = sel;
 }
 
-int Emomen::get_num_buttons()
+int UI::get_num_buttons()
 {
     return (int) button_labels.size();
 }
 
 // calculates rectangular coordinates by using the upper left coordinate of
 // the rectangle, along with it's length and height
-void Emomen::rect_coordinates(float arr[4][2], float up_left[2], float length, 
+void UI::rect_coordinates(float arr[4][2], float up_left[2], float length, 
 float height)
 {
     arr[0][0] = up_left[0];
@@ -184,7 +182,7 @@ float height)
 }
 
 // calculate positioning for a shadow and a raised button
-void Emomen::raise_button(float arr[4][2], float shadow_arr[4][2])
+void UI::raise_button(float arr[4][2], float shadow_arr[4][2])
 {
     float raise_amount = 10.0;
 
@@ -205,7 +203,7 @@ void Emomen::raise_button(float arr[4][2], float shadow_arr[4][2])
     }
 }
 
-void Emomen::draw_rect(float arr[4][2], float color[3])
+void UI::draw_rect(float arr[4][2], float color[3])
 {
     glColor3f(color[0], color[1], color[2]);
     glBegin(GL_QUADS);
@@ -217,7 +215,7 @@ void Emomen::draw_rect(float arr[4][2], float color[3])
 // takes a box given by top left coordinate and length,height
 // and prints a word with the specified x,y size automatically
 // centering it inside the box
-void Emomen::draw_text(float top_left[2], float length, float height,
+void UI::draw_text(float top_left[2], float length, float height,
 float x_char_size, float y_char_size, float text_color[3], std::string word)
 {
     int num_letters = (int) word.size();
@@ -248,7 +246,7 @@ float x_char_size, float y_char_size, float text_color[3], std::string word)
     }
 }
 
-void Emomen::create_button(int button_num)
+void UI::create_button(int button_num)
 {
     float button_length = xres/3;
     float button_height = yres/7.5;
@@ -287,7 +285,7 @@ void Emomen::create_button(int button_num)
 }
 
 // create background state info
-void Emomen::create_background()
+void UI::create_background()
 {
     int grass_orientation;
     int adjustment;
@@ -336,7 +334,7 @@ void Emomen::create_background()
 }
 
 // draw the background of each scene
-void Emomen::draw_background()
+void UI::draw_background()
 {
     // set background color and clear the screen
     float bgcolor[3] = {0.149f, 0.133f, 0.329f};
@@ -385,7 +383,7 @@ void Emomen::draw_background()
 }
 
 // draw game title
-void Emomen::draw_title()
+void UI::draw_title()
 {
     std::string title1 = "soul";
     std::string title2 = "terrain";
@@ -401,7 +399,7 @@ void Emomen::draw_title()
     title2);
 }
 
-void Emomen::draw_menu_help()
+void UI::draw_menu_help()
 {
     float bottom_margin = yres/20.0f;
     float textbox_height = yres/15.0f;
@@ -460,7 +458,7 @@ void Emomen::draw_menu_help()
 }
 
 // render the start menu
-void Emomen::render_start() 
+void UI::render_start() 
 {
     draw_background();
     draw_title();
@@ -474,7 +472,7 @@ void Emomen::render_start()
 }
 
 // render the credits screen
-void Emomen::render_credits()
+void UI::render_credits()
 {
     draw_background();
 
@@ -505,7 +503,7 @@ void Emomen::render_credits()
     draw_text(top_left, xres, yres/6, xres/25, yres/25, text_color, text);
 }
 
-std::string Emomen::get_score_text()
+std::string UI::get_score_text()
 {
     std::string score_text = "score: ";
     std::string score_num = std::to_string(user_score);
@@ -518,7 +516,7 @@ std::string Emomen::get_score_text()
 }
 
 // render the game over screen
-void Emomen::render_gameover()
+void UI::render_gameover()
 {
     draw_background();
     
@@ -544,14 +542,14 @@ void Emomen::render_gameover()
     text);
 }
 
-void Emomen::get_ghost_info(float pos[2], float health)
+void UI::get_ghost_info(float pos[2], float health)
 {
     ghost_info.push_back(pos[0]);
     ghost_info.push_back(pos[1]);
     ghost_info.push_back(health);
 }
 
-void Emomen::draw_health_bar(HealthBarInfo hb)
+void UI::draw_health_bar(HealthBarInfo hb)
 {
     // hb coordinates
     rect_coordinates(hb.bar, hb.top_left, hb.health, hb.height);
@@ -579,7 +577,7 @@ void Emomen::draw_health_bar(HealthBarInfo hb)
     draw_rect(hb.bar_border, hb.border_color);
 }
 
-void Emomen::draw_UI() 
+void UI::draw_UI() 
 {
     // player health bar
     float top_margin = yres/8;

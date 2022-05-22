@@ -1,4 +1,7 @@
-//
+//Modified by: Evan Momen, Nicholas Romasanta, Isiah Ruiz, Alonso Cardenas Sillas
+//Spring 2022
+// 
+// 
 //program: asteroids.cpp
 //author:  Gordon Griesel
 //date:    2014 - 2021
@@ -13,13 +16,8 @@
 #include <ctime>
 #include <cmath>
 #include <X11/Xlib.h>
-//#include <X11/Xutil.h>
-//#include <GL/gl.h>
-//#include <GL/glu.h>
 #include <X11/keysym.h>
 #include <GL/glx.h>
-#include "log.h"
-#include "fonts.h"
 
 //defined types
 typedef float Flt;
@@ -55,45 +53,23 @@ extern double timeSpan;
 extern double timeDiff(struct timespec *start, struct timespec *end);
 extern void timeCopy(struct timespec *dest, struct timespec *source);
 //-----------------------------------------------------------------------------
-// Importing the Emomen class instance
-#include "emomen.h"
-extern class Emomen em;
+// Importing the UI class instance
+#include "ui.h"
+extern class UI ui;
 //-----------------------------------------------------------------------------
-//acardenassil.cpp
-#include "acardenassil.h"
-extern class Acardsill acs;
-//-----------------------------------------------------------------------------
-//nromasanta.cpp
-#include "nromasanta.h"
-extern class nromasanta nr;
-//-----------------------------------------------------------------------------
-//iruiz.cpp
-#include "iruiz.h"
-extern class Iruiz ir;
+// Importing the Entity class instance
+#include "entity.h"
+extern class Entity en;
 //-----------------------------------------------------------------------------
 class Global {
 public:
     int xres, yres;
-    int winxres, winyres, dimScale, resFail;
     char keys[65536];
     Global() {
-        dimScale = 2; //window to world ratio
-        int x = 640;
-        int y = 480;
-        //set the world size and game window size
-        acs.setSize(x, y, dimScale, xres, yres, winxres, winyres);
-        resFail = acs.testCameraResolution(dimScale, xres, yres, 
-                                                        winxres, winyres);
-
+        xres = 640;
+        yres = 480;
         memset(keys, 0, 65536);
     }
-    
-    void resetSize(int x, int y) {
-        acs.setSize(x, y, dimScale, xres, yres, winxres, winyres);
-        resFail = acs.testCameraResolution(dimScale, xres, yres, 
-                                                        winxres, winyres);
-    }
-
 } gl;
 
 class Ship {
@@ -108,8 +84,8 @@ public:
     float color[3];
 public:
     Ship() {
-        pos[0] = (Flt)(gl.winxres/2);
-        pos[1] = (Flt)(gl.winyres/2);
+        pos[0] = (Flt)(gl.xres/2);
+        pos[1] = (Flt)(gl.yres/2);
         pos[2] = 0.0f;
         VecZero(dir);
         VecZero(vel);
@@ -191,7 +167,7 @@ public:
                 angle += inc;
             }
             //enemyBehavior() defines movement 
-            nr.enemyBehavior(a->vel, a->pos, gl.winxres, gl.winyres,rnd()); 
+            en.enemyBehavior(a->vel, a->pos, gl.xres, gl.yres,rnd()); 
 
             a->angle = 0.0;
             a->rotate = rnd() * 4.0 - 2.0;
@@ -224,7 +200,7 @@ public:
         GLint att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None };
         //GLint att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, None };
         XSetWindowAttributes swa;
-        setup_screen_res(gl.winxres, gl.winyres);
+        setup_screen_res(gl.xres, gl.yres);
         dpy = XOpenDisplay(NULL);
         if (dpy == NULL) {
             std::cout << "\n\tcannot connect to X server" << std::endl;
@@ -234,12 +210,12 @@ public:
         XWindowAttributes getWinAttr;
         XGetWindowAttributes(dpy, root, &getWinAttr);
         int fullscreen = 0;
-        gl.winxres = w;
-        gl.winyres = h;
+        gl.xres = w;
+        gl.yres = h;
         if (!w && !h) {
             //Go to fullscreen.
-            gl.winxres = getWinAttr.width;
-            gl.winyres = getWinAttr.height;
+            gl.xres = getWinAttr.width;
+            gl.yres = getWinAttr.height;
             //When window is fullscreen, there is no client window
             //so keystrokes are linked to the root window.
             XGrabKeyboard(dpy, root, False,
@@ -261,7 +237,7 @@ public:
             winops |= CWOverrideRedirect;
             swa.override_redirect = True;
         }
-        win = XCreateWindow(dpy, root, 0, 0, gl.winxres, gl.winyres, 0,
+        win = XCreateWindow(dpy, root, 0, 0, gl.xres, gl.yres, 0,
                 vi->depth, InputOutput, vi->visual, winops, &swa);
         //win = XCreateWindow(dpy, root, 0, 0, gl.xres, gl.yres, 0,
         //vi->depth, InputOutput, vi->visual, CWColormap | CWEventMask, &swa);
@@ -285,7 +261,7 @@ public:
         if (e->type != ConfigureNotify)
             return;
         XConfigureEvent xce = e->xconfigure;
-        if (xce.width != gl.winxres || xce.height != gl.winyres) {
+        if (xce.width != gl.xres || xce.height != gl.yres) {
             //Window size did change.
             reshape_window(xce.width, xce.height);
         }
@@ -296,12 +272,13 @@ public:
         glViewport(0, 0, (GLint)width, (GLint)height);
         glMatrixMode(GL_PROJECTION); glLoadIdentity();
         glMatrixMode(GL_MODELVIEW); glLoadIdentity();
-        glOrtho(0, gl.winxres, 0, gl.winyres, -1, 1);
+        glOrtho(0, gl.xres, 0, gl.yres, -1, 1);
         set_title();
-        em.get_window_size(width, height); // update window size info
+        ui.get_window_size(width, height); // update window size info
     }
     void setup_screen_res(const int w, const int h) {
-        gl.resetSize(w, h);
+        gl.xres = w;
+        gl.yres = h;
     }
     void swapBuffers() {
         glXSwapBuffers(dpy, win);
@@ -342,7 +319,7 @@ public:
         //it will undo the last change done by XDefineCursor
         //(thus do only use ONCE XDefineCursor and then XUndefineCursor):
     }
-} x11(gl.winxres, gl.winyres);
+} x11(gl.xres, gl.yres);
 // ---> for fullscreen x11(0, 0);
 
 //function prototypes
@@ -358,9 +335,8 @@ void render();
 int main()
 {
 
-    em.get_window_size(gl.winxres, gl.winyres);
-    em.get_total_health(g.ship.health);
-    logOpen();
+    ui.get_window_size(gl.xres, gl.yres);
+    ui.get_total_health(g.ship.health);
     init_opengl();
     srand(time(NULL));
     clock_gettime(CLOCK_REALTIME, &timePause);
@@ -375,10 +351,10 @@ int main()
             done = check_keys(&e);
         }
         // separate render function for the start, game, and credits screen
-        switch (em.get_screen()) {
+        switch (ui.get_screen()) {
             case start: 
                 {
-                    em.render_start();
+                    ui.render_start();
                     break;
                 }
             case game: 
@@ -391,39 +367,37 @@ int main()
                         physics();
                         physicsCountdown -= physicsRate;
                     }
-                    em.draw_background();
+                    ui.draw_background();
                     render();
-                    em.draw_UI(); // draw UI on top of the game
+                    ui.draw_UI(); // draw UI on top of the game
                     break;
                 }
             case credits: 
                 {
-                    em.render_credits();
+                    ui.render_credits();
                     break;
                 }
             case gameover: 
                 {
-                    em.render_gameover();
+                    ui.render_gameover();
                     break;
                 }
 
         }
         x11.swapBuffers();
     }
-    cleanup_fonts();
-    logClose();
     return 0;
 }
 
 void init_opengl(void)
 {
     //OpenGL initialization
-    glViewport(0, 0, gl.winxres, gl.winyres);
+    glViewport(0, 0, gl.xres, gl.yres);
     //Initialize matrices
     glMatrixMode(GL_PROJECTION); glLoadIdentity();
     glMatrixMode(GL_MODELVIEW); glLoadIdentity();
     //This sets 2D mode (no perspective)
-    glOrtho(0, gl.winxres, 0, gl.winyres, -1, 1);
+    glOrtho(0, gl.xres, 0, gl.yres, -1, 1);
     //
     glDisable(GL_LIGHTING);
     glDisable(GL_DEPTH_TEST);
@@ -436,7 +410,6 @@ void init_opengl(void)
     glClearColor(101.0/255.0, 67.0/255.0, 33.0/255.0, 1.0);
     //Do this to allow fonts
     glEnable(GL_TEXTURE_2D);
-    initialize_fonts();
 }
 
 void normalize2d(Vec v)
@@ -532,10 +505,10 @@ int check_keys(XEvent *e)
     switch (key) {
         case XK_Escape: 
             {
-                if (em.get_screen() == start || em.get_screen() == gameover) {
+                if (ui.get_screen() == start || ui.get_screen() == gameover) {
                     return 1;
                 } else {
-                    em.set_screen(start);
+                    ui.set_screen(start);
                 }
                 break;
             }
@@ -545,38 +518,32 @@ int check_keys(XEvent *e)
             break;
         case XK_Up: 
             {
-                if (em.get_screen() == start) {
-                    enum SelectedButton current = em.get_select();
-                    int next = (current - 1) + em.get_num_buttons();
-                    next %= em.get_num_buttons();
-                    em.set_select((enum SelectedButton) next);
-                } else if (em.get_screen() == game) {
-                    // game logic for Up arrow here
+                if (ui.get_screen() == start) {
+                    enum SelectedButton current = ui.get_select();
+                    int next = (current - 1) + ui.get_num_buttons();
+                    next %= ui.get_num_buttons();
+                    ui.set_select((enum SelectedButton) next);
                 }
                 break;
             }
         case XK_Down: 
             {
-                if (em.get_screen() == start) {
-                    enum SelectedButton current = em.get_select();
-                    int next = (current + 1) + em.get_num_buttons();
-                    next %= em.get_num_buttons();
-                    em.set_select((enum SelectedButton) next);
-                } else if (em.get_screen() == game) {
-                    // game logic for Down arrow here
+                if (ui.get_screen() == start) {
+                    enum SelectedButton current = ui.get_select();
+                    int next = (current + 1) + ui.get_num_buttons();
+                    next %= ui.get_num_buttons();
+                    ui.set_select((enum SelectedButton) next);
                 }
                 break;
             }
         case XK_Return: 
             {
-                if (em.get_screen() == start) {
-                    if (em.get_select() == game_button) {
-                        em.set_screen(game);
-                    } else if (em.get_select() == credits_button) {
-                        em.set_screen(credits);
+                if (ui.get_screen() == start) {
+                    if (ui.get_select() == game_button) {
+                        ui.set_screen(game);
+                    } else if (ui.get_select() == credits_button) {
+                        ui.set_screen(credits);
                     }
-                } else if (em.get_screen() == game) {
-                    // game logic for Return key here
                 }
                 break;
             }
@@ -649,16 +616,16 @@ void physics()
     g.ship.pos[1] += g.ship.vel[1];
     //Check for collision with window edges
     if (g.ship.pos[0] < 0.0) {
-        g.ship.pos[0] += (float)gl.winxres;
+        g.ship.pos[0] += (float)gl.xres;
     }
-    else if (g.ship.pos[0] > (float)gl.winxres) {
-        g.ship.pos[0] -= (float)gl.winxres;
+    else if (g.ship.pos[0] > (float)gl.xres) {
+        g.ship.pos[0] -= (float)gl.xres;
     }
     else if (g.ship.pos[1] < 0.0) {
-        g.ship.pos[1] += (float)gl.winyres;
+        g.ship.pos[1] += (float)gl.yres;
     }
-    else if (g.ship.pos[1] > (float)gl.winyres) {
-        g.ship.pos[1] -= (float)gl.winyres;
+    else if (g.ship.pos[1] > (float)gl.yres) {
+        g.ship.pos[1] -= (float)gl.yres;
     }
     //
     //
@@ -691,21 +658,21 @@ void physics()
         a->pos[1] += a->vel[1];
         //Check for collision with window edges
         if (a->pos[0] < -100.0) {
-            a->pos[0] += (float)gl.winxres+200;
+            a->pos[0] += (float)gl.xres+200;
         }
-        else if (a->pos[0] > (float)gl.winxres+100) {
-            a->pos[0] -= (float)gl.winxres+200;
+        else if (a->pos[0] > (float)gl.xres+100) {
+            a->pos[0] -= (float)gl.xres+200;
         }
         else if (a->pos[1] < -100.0) {
-            a->pos[1] += (float)gl.winyres+200;
+            a->pos[1] += (float)gl.yres+200;
         }
-        else if (a->pos[1] > (float)gl.winyres+100) {
-            a->pos[1] -= (float)gl.winyres+200;
+        else if (a->pos[1] > (float)gl.yres+100) {
+            a->pos[1] -= (float)gl.yres+200;
         }
-        g.ship.health = nr.wizCollision(a->pos, g.ship.pos, 
+        g.ship.health = en.wizCollision(a->pos, g.ship.pos, 
                 g.ship.radius, g.ship.health);
         //std::cout << "ship health: " << g.ship.health << std::endl;
-        em.emomen_get_health(g.ship.health);
+        ui.get_health(g.ship.health);
         a->angle += a->rotate;
         a = a->next;
     }
@@ -735,8 +702,8 @@ void physics()
                     clock_gettime(CLOCK_REALTIME, &ghostDie);
                     double timeDeath= timeDiff(&g.ghostTimer, &ghostDie);
                     //----Added score counter----//
-                    g._score += nr.updateScore(a->ghostClass, timeDeath);
-                    em.get_user_score(g._score);
+                    g._score += en.updateScore(a->ghostClass, timeDeath);
+                    ui.get_user_score(g._score);
 
                     //asteroid is too small to break up
                     //delete the asteroid and bullet
@@ -759,40 +726,37 @@ void physics()
             break;
         a = a->next;
     }
+
     //---------------------------------------------------
     //check keys pressed now
-    /*-------------GORDON CODE------------------
-    if (gl.keys[XK_Left]) {
-        g.ship.angle += 4.0;
-        if (g.ship.angle >= 360.0f)
-            g.ship.angle -= 360.0f;
+    if (!gl.keys[XK_a] && !gl.keys[XK_d]) {
+            g.ship.vel[0] = 0.0f;
     }
-    if (gl.keys[XK_Right]) {
-        g.ship.angle -= 4.0;
-        if (g.ship.angle < 0.0f)
-            g.ship.angle += 360.0f;
+    if (gl.keys[XK_a]) {
+        g.ship.vel[0] -= 0.1f;
     }
-    if (gl.keys[XK_Up]) {
-        //apply thrust
-        //convert ship angle to radians
-        Flt rad = ((g.ship.angle+90.0) / 360.0f) * PI * 2.0;
-        //convert angle to a vector
-        Flt xdir = cos(rad);
-        Flt ydir = sin(rad);
-        g.ship.vel[0] += xdir*0.02f;
-        g.ship.vel[1] += ydir*0.02f;
-        Flt speed = sqrt(g.ship.vel[0]*g.ship.vel[0]+
-                g.ship.vel[1]*g.ship.vel[1]);
-        if (speed > 10.0f) {
-            speed = 10.0f;
-            normalize2d(g.ship.vel);
-            g.ship.vel[0] *= speed;
-            g.ship.vel[1] *= speed;
-        }
+    if (gl.keys[XK_d]) {
+            g.ship.vel[0] += 0.1f;
     }
-    ------------------------------------*/
-    //------------iruiz added------------
-    ir.movement(gl.keys, g.ship.vel);
+
+
+    if (!gl.keys[XK_w] && !gl.keys[XK_s]) {
+            g.ship.vel[1] = 0.0f;
+    }
+    if (gl.keys[XK_w]) {
+            g.ship.vel[1] += 0.1f;
+    }
+    if (gl.keys[XK_s]) {
+            g.ship.vel[1] -= 0.1f;
+    } 
+
+    if (gl.keys[XK_Left] && g.ship.angle < 0.0f ) {
+        g.ship.angle += 2.5f;
+    }
+    if (gl.keys[XK_Right] && g.ship.angle > -180.0f ) {
+        g.ship.angle -= 2.5f;
+    }
+
     //-----speed normalizer for ship from lines 784-791  moved here------
     Flt speed = sqrt(g.ship.vel[0]*g.ship.vel[0]+
             g.ship.vel[1]*g.ship.vel[1]);
@@ -850,14 +814,14 @@ void render()
 {
     //-------------------------------------------------------------------------
     //Draw the ship
-    nr.drawHunter(g.ship.pos, g.ship.angle);
+    en.drawHunter(g.ship.pos, g.ship.angle);
     //-------------------------------------------------------------------------
     //Draw the asteroids
     {
         Asteroid *a = g.ahead;
         while (a) {
-            nr.drawGhost(a->pos, 1.0, 1.0, 1.0);
-            em.get_ghost_info(a->pos, a->health);
+            en.drawGhost(a->pos, 1.0, 1.0, 1.0);
+            ui.get_ghost_info(a->pos, a->health);
             a = a->next; 
         }
     }
@@ -865,6 +829,6 @@ void render()
     //Draw the bullets
     for (int i=0; i<g.nbullets; i++) {
         Bullet *b = &g.barr[i];
-        nr.drawBullet(b->pos);
+        en.drawBullet(b->pos);
     }
 }

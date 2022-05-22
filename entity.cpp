@@ -14,27 +14,18 @@
 #include <cmath>
 #include <string>
 #include <ctime>
-#include "nromasanta.h"
-class nromasanta nr;
+#include "entity.h"
+
+class Entity en;
 extern class Asteroid a;
 
 
-nromasanta::nromasanta()
+Entity::Entity()
 {
 	//contructor with nothing
 }
 
-bool nromasanta::nromasanta_midterm(int midterm)
-{
-	//This function checks to see if there are 10 ghosts (asteroids) on the screen
-	if (midterm == 10) { 
-		return 1; //return true
-	} else {
-		return 0; //return false
-	}
-}
-
-float nromasanta::updateHealth(float health)
+float Entity::updateHealth(float health)
 {
 	//The goal is to make it so that different ghost types 
 	//remove a different amount of health
@@ -44,7 +35,7 @@ float nromasanta::updateHealth(float health)
 	//std::cout << "new health is: " << health << std::endl;
 	return health;
 }
-float nromasanta::wizCollision(float ghostPos[], float wizPos[], 
+float Entity::wizCollision(float ghostPos[], float wizPos[], 
 		float wizRadius, float wizHealth)
 {
 	float d0 = ghostPos[0] - wizPos[0];
@@ -63,7 +54,7 @@ float nromasanta::wizCollision(float ghostPos[], float wizPos[],
 
 
 
-int nromasanta::updateScore(int ghostType, double timeAlive)
+int Entity::updateScore(int ghostType, double timeAlive)
 {
 	//Note:
 	// - The higher value the ghost type, the stronger the enemy
@@ -81,7 +72,7 @@ int nromasanta::updateScore(int ghostType, double timeAlive)
 	return score;
 }
 
-void nromasanta::enemyBehavior(float direction[],float spawn[],int xres,
+void Entity::enemyBehavior(float direction[],float spawn[],int xres,
 		int yres,float rnd)
 {
 	direction[0] = 2*(rnd*2.0-1.0); // Horizontal Speed
@@ -95,7 +86,7 @@ void nromasanta::enemyBehavior(float direction[],float spawn[],int xres,
 }
 
 
-void nromasanta::drawGhost(float * pos, float r, float g, float b)
+void Entity::drawGhost(float * pos, float r, float g, float b)
 {
 	//Head
 	glPushMatrix();
@@ -152,13 +143,13 @@ void nromasanta::drawGhost(float * pos, float r, float g, float b)
 }
 
 /*
-   void nromasanta::drawExplosion(float * pos)
+   void Entity::drawExplosion(float * pos)
    {
 //Placeholder
 }
 */
 
-void nromasanta::drawHunter(float * pos, float angle)
+void Entity::drawHunter(float * pos, float angle)
 {
 	//NOTE: Ship angle is on line 100 of asteroids.cpp
 
@@ -292,7 +283,7 @@ void nromasanta::drawHunter(float * pos, float angle)
 
 }
 
-void nromasanta::drawBullet(float pos[])
+void Entity::drawBullet(float pos[])
 {
 	glColor3f(1.0, 1.0, 1.0);
 	glBegin(GL_POINTS);
